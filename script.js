@@ -63,7 +63,11 @@ new Vue({
 				ocost: new Decimal(100),
 				unlocked: 1
 			},
-		]
+		],
+
+		showNotification: false,
+		notificationID: null,
+		notificationStatus: true
 	},
 
 	computed: {
@@ -77,12 +81,20 @@ new Vue({
 	},
 
 	methods: {
+		format: format,
+
 		mutate() {
 			if (this.chance.gte(Math.random())) {
 				let gain = this.gain.times(this.multiplier);
 				this.eff = this.eff.plus(gain);
 				this.total = this.total.plus(gain);
-			}
+
+				this.notificationStatus = true;
+			} else this.notificationStatus = false;
+			
+			this.showNotification = true;
+			if (this.notificationID !== null) clearTimeout(this.notificationID);
+			this.notificationID = setTimeout(() => this.showNotification = false, 500);
 		},
 
 		evolve() {
