@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<head>
+			<title>Evolution</title>
+	
+			<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+			<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+			<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+			<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+			<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+			<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+			<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+			<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+			<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+			<link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+			<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+			<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+			<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+			<link rel="manifest" href="/manifest.json">
+			<meta name="msapplication-TileColor" content="#ffffff">
+			<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+			<meta name="theme-color" content="#ffffff">
+	
+			<!-- Global site tag (gtag.js) - Google Analytics -->
+			<script async src="https://www.googletagmanager.com/gtag/js?id=UA-107754281-2"></script>
+			<script>
+				window.dataLayer = window.dataLayer || [];
+	
+				function gtag() {
+					dataLayer.push(arguments);
+				}
+				gtag('js', new Date());
+	
+				gtag('config', 'UA-107754281-2');
+			</script>
+	
+			<link
+				href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+				rel="stylesheet"
+				integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+				crossorigin="anonymous">
+			<link rel="stylesheet" href="style.css">
+		</head>
+	</head>
+
+	<body class="container">
+		<p>
+			<br>
+			<a href="/" class="btn btn-outline-primary" role="button">Back</a>
+		</p>
+
+		<div id="app">
+			<div class="row">
+				<div class="col-12">
+					<p>
+						This project is getting a bit big, so I'm going to migrate it to a Vue.js Webpack project.
+						Don't be worried if the updates are getting less frequent!
+					</p>
+					<h1>
+						Evolution of {{ stages[stage] }} -
+						{{ format(eff.div(evolveReq).times(100)) }}%
+					</h1>
+
+					<button
+						class="btn btn-outline-primary btn-lg btn-block"
+						v-if="eff.gte(evolveReq)"
+						@click="evolve">
+						EVOLVE - Become {{ stages[stage + 1] }}, restarting with a 5x boost
+					</button>
+					<button
+						class="btn btn-outline-primary btn-lg btn-block"
+						v-if="this.wisdomGain.gte(5)"
+						@click="evolve">
+						ASCEND - Return to bacteria with a {{ format(wisdomGain) }}x overall boost
+					</button>
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="row">
+				<div class="col-12">
+					<h3>{{ format(eff) }} Efficiency</h3>
+					
+					<button
+						class="btn btn-success btn-lg btn-block"
+						@click="mutate()"
+						@keydown.prevent>
+						Mutate - Chance: {{ format(chance.times(100)) }}%
+					</button>
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="row">
+				<div class="col-12">
+					<h3>Upgrades</h3>
+					
+					<button
+						class="btn btn-warning btn-block"
+						v-for="(up, id) in upgrades"
+						@click="getUpgrade(id)">
+						{{ up.name }} -
+						Level {{ format(up.level) }} -
+						{{ up.effect }} -
+						Cost: {{ format(up.cost) }} Efficiency
+					</button>
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="row">
+				<div class="col-12">
+					<h3>Automata</h3>
+
+					<button
+						class="btn btn-danger btn-block"
+						v-for="(auto, id) in automata"
+						v-if="stage >= auto.unlocked"
+						@click="getAutomata(id)">
+						{{ format(auto.amount) }}
+						{{ auto.name }} -
+						{{ format(auto.eps.times(multiplier)) }} EPS -
+						Total {{ format(auto.eps.times(multiplier).times(auto.amount)) }} EPS -
+						Cost: {{ format(auto.cost) }} Efficiency
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<script src="/global/decimal.min.js"></script>
+		<script src="/global/format.min.js"></script>
+		<script src="/global/vue.min.js"></script>
+		<script src="script.js"></script>
+	</body>
+</html>

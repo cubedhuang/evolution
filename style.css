@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,400b');
+
+@media only screen and (max-width : 767px) {
+	html {
+		font-size: 90%;
+	}
+}
+
+@media only screen and (max-width : 550px) {
+	html {
+		font-size: 80%;
+	}
+}
+
+@media only screen and (max-width : 480px) {
+	html {
+		font-size: 70%;
+	}
+}
+
+@media only screen and (max-width : 360px) {
+	html {
+		font-size: 60%;
+	}
+}
+
+html {
+	overflow: hidden;
+}
+
+* { font-family: "Open Sans", "Lato", Arial, Helvetica, sans-serif !important; }
+
+h1, h2, h3 { font-weight: 300; }
