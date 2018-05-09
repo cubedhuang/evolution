@@ -49,7 +49,23 @@ new Vue({
 
 		upgrades: [
 			{
-				name: "Gradual Changes",
+				name: [
+					"Faster Reproduction",
+					"Faster Reproduction",
+					"Faster Reproduction",
+					"Faster Reproduction",
+					"Faster Reproduction",
+					"Faster Reproduction",
+					"Faster Reproduction",
+					"Stronger Tools",
+					"Better Tech",
+					"Faster Algorithms",
+					"Faster Algorithms",
+					"Greater Universes",
+					"Universe Fragments",
+					"Perfect Universes",
+					// DO SOMETHING FOR INFINITIES VVV
+				],
 				level: new Decimal(1),
 				effect: "Increases Chance",
 				cost: new Decimal(1),
@@ -57,7 +73,23 @@ new Vue({
 				prgm: "chance"
 			},
 			{
-				name: "More Genes",
+				name: [
+					"Useful Genes",
+					"Useful Proteins",
+					"Advanced Genes",
+					"Advanced Proteins",
+					"Bigger Size",
+					"Complex Brains",
+					"Complex Brains",
+					"Complex Brains",
+					"Complex Brains",
+					"Improved Processing",
+					"Improved Expansion",
+					"Exotic Universes",
+					"Faster Destruction",
+					"Exotic Multiverses",
+					// DO SOMETHING FOR INFINITIES VVV
+				],
 				level: new Decimal(1),
 				effect: "More Efficiency Gain",
 				cost: new Decimal(10),

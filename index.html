@@ -53,6 +53,7 @@
 				rel="stylesheet"
 				integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 				crossorigin="anonymous">
+			<link rel="stylesheet" href="resources/animate.min.css">
 			<link rel="stylesheet" href="style.css">
 		</head>
 	</head>
@@ -94,12 +95,23 @@
 			<div class="row">
 				<div class="col-12">
 					<h3 class="float-left">{{ format(eff) }} Efficiency</h3>
-					<p
-						class="float-right"
-						:class="[notificationStatus ? 'green' : 'red']"
-						v-if="showNotification">
-						{{ notificationStatus ? "Success" : "Failure" }}
-					</p>
+
+					<transition
+						enter-active-class="animated fadeInDown"
+						leave-active-class="animated fadeOutDown">
+						<p
+							class="float-right notification green"
+							v-if="showNotification &amp;&amp; notificationStatus"
+							>
+							+{{ format(gain) }}
+						</p>
+						<p
+							class="float-right notification red"
+							v-else-if="showNotification"
+							>
+							0
+						</p>
+					</transition>
 					
 					<button
 						class="btn btn-success btn-lg btn-block"
@@ -120,7 +132,7 @@
 						class="btn btn-warning btn-block"
 						v-for="(up, id) in upgrades"
 						@click="getUpgrade(id)">
-						{{ up.name }} -
+						{{ up.name[stage] }} -
 						Level {{ format(up.level) }} -
 						{{ up.effect }} -
 						Cost: {{ format(up.cost) }} Efficiency
@@ -151,7 +163,7 @@
 
 		<script src="/resources/decimal.min.js"></script>
 		<script src="/resources/format.min.js"></script>
-		<script src="/resources/vue.dev.js"></script>
+		<script src="/resources/vue.min.js"></script>
 		<script src="script.js"></script>
 	</body>
 </html>
