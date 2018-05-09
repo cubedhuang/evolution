@@ -85,7 +85,11 @@
 						class="btn btn-outline-primary btn-lg btn-block"
 						v-if="this.wisdomGain.gte(5)"
 						@click="ascend">
-						ASCEND - Return to Prokaryotes with a {{ format(wisdomGain) }}x overall boost
+						ASCEND - Return to Prokaryotes with a {{ format(wisdomGain) }}x more wisdom
+						<br>
+						<div class="small">
+							Current: {{ format(wisdom) }} &raquo; New: {{ format(wisdom.plus(wisdomGain)) }}
+						</div>
 					</button>
 				</div>
 			</div>

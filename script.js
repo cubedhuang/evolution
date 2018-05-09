@@ -165,8 +165,23 @@ new Vue({
 		},
 
 		ascend() {
-			this.restart();
+			this.eff = new Decimal(0);
+			this.chance = new Decimal(0.25);
+			this.gain = new Decimal(1);
+			this.evolveReq = new Decimal(1000);
+			this.totalNow = new Decimal(0);
 			this.stage = 0;
+
+			for (let i = 0; i < this.automata.length; i++) {
+				this.automata[i].amount = new Decimal(0);
+				this.automata[i].cost = new Decimal(this.automata[i].ocost);
+			}
+
+			for (let i = 0; i < this.upgrades.length; i++) {
+				this.upgrades[i].level = new Decimal(1);
+				this.upgrades[i].cost = new Decimal(this.upgrades[i].ocost);
+			}
+
 			this.wisdom = this.wisdom.plus(this.wisdomGain);
 		},
 
@@ -204,23 +219,6 @@ new Vue({
 				this.eff = this.eff.minus(auto.cost);
 				auto.cost = auto.cost.times(1.25).floor();
 				auto.amount = auto.amount.plus(1);
-			}
-		},
-
-		restart() {
-			this.eff = new Decimal(0);
-			this.chance = new Decimal(0.25);
-			this.gain = new Decimal(1);
-			this.evolveReq = new Decimal(1000);
-
-			for (let i = 0; i < this.automata.length; i++) {
-				this.automata[i].amount = new Decimal(0);
-				this.automata[i].cost = new Decimal(this.automata[i].ocost);
-			}
-
-			for (let i = 0; i < this.upgrades.length; i++) {
-				this.upgrades[i].level = new Decimal(1);
-				this.upgrades[i].cost = new Decimal(this.upgrades[i].ocost);
 			}
 		}
 	}
