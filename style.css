@@ -25,7 +25,8 @@
 }
 
 html {
-	overflow: hidden;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
 * { font-family: "Open Sans", "Lato", Arial, Helvetica, sans-serif !important; }

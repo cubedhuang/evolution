@@ -17,13 +17,33 @@ new Vue({
 
 	data: {
 		eff: new Decimal(0),
+		prev: new Decimal(0),
+		totalNow: new Decimal(0),
 		total: new Decimal(0),
 		chance: new Decimal(0.25),
 		gain: new Decimal(1),
 
 		evolveReq: new Decimal(1000),
 		stage: 0,
-		stages: ["Bacteria", "Eukaryokes", "Mammals"],
+		stages: [
+			"Prokaryotes",
+			"Archaea",
+			"Eukaryokes",
+			"Algae",
+			"Reptiles",
+			"Mammals",
+			"Monkeys",
+			"Cavemen",
+			"Humans",
+			"AI",
+			"Energy",
+			"Creators",
+			"Corruptors",
+			"Protectors",
+			"Infinities",
+			"Seers",
+			"Shifters",
+		],
 		
 		wisdom: new Decimal(1),
 
@@ -80,6 +100,18 @@ new Vue({
 		}
 	},
 
+	watch: {
+		eff(val) {
+			val = val.toString();
+			if (this.eff.gt(this.prev)) {
+				var diff = this.eff.minus(this.prev);
+				this.total = this.total.plus(diff);
+				this.totalNow = this.totalNow.plus(diff);
+			}
+			this.prev = this.eff;
+		}
+	},
+
 	methods: {
 		format: format,
 
@@ -87,7 +119,6 @@ new Vue({
 			if (this.chance.gte(Math.random())) {
 				let gain = this.gain.times(this.multiplier);
 				this.eff = this.eff.plus(gain);
-				this.total = this.total.plus(gain);
 
 				this.notificationStatus = true;
 			} else this.notificationStatus = false;
@@ -98,7 +129,6 @@ new Vue({
 		},
 
 		evolve() {
-			this.restart();
 			this.stage++;
 		},
 
@@ -114,7 +144,6 @@ new Vue({
 					times(this.automata[i].amount).
 					times(this.multiplier);
 				this.eff = this.eff.plus(gain);
-				this.total = this.total.plus(gain);
 			}
 		},
 
@@ -150,7 +179,7 @@ new Vue({
 			this.eff = new Decimal(0);
 			this.chance = new Decimal(0.25);
 			this.gain = new Decimal(1);
-			this.evolveReq = this.evolveReq.times(1000);
+			this.evolveReq = new Decimal(1000);
 
 			for (let i = 0; i < this.automata.length; i++) {
 				this.automata[i].amount = new Decimal(0);

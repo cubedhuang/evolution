@@ -61,6 +61,7 @@
 		<p>
 			<br>
 			<a href="https://cubedhuang.com" class="btn btn-outline-primary" role="button">Back</a>
+			<a href="/reference/" class="btn btn-outline-success" role="button">Reference</a>
 		</p>
 
 		<div id="app">
@@ -68,20 +69,22 @@
 				<div class="col-12">
 					<h1>
 						Evolution of {{ stages[stage] }} -
-						{{ format(eff.div(evolveReq).times(100)) }}%
+						{{ format(total.div(evolveReq).times(100)) }}%
 					</h1>
 
 					<button
 						class="btn btn-outline-primary btn-lg btn-block"
-						v-if="eff.gte(evolveReq)"
+						v-if="total.gte(evolveReq)"
 						@click="evolve">
-						EVOLVE - Become {{ stages[stage + 1] }}, restarting with a 5x boost
+						EVOLVE - Become {{ stages[stage + 1] }}, with a 5x boost
+						<br>
+						<div class="small">Progress is not reset.</div>
 					</button>
 					<button
 						class="btn btn-outline-primary btn-lg btn-block"
 						v-if="this.wisdomGain.gte(5)"
 						@click="ascend">
-						ASCEND - Return to bacteria with a {{ format(wisdomGain) }}x overall boost
+						ASCEND - Return to Prokaryotes with a {{ format(wisdomGain) }}x overall boost
 					</button>
 				</div>
 			</div>
@@ -101,7 +104,7 @@
 					<button
 						class="btn btn-success btn-lg btn-block"
 						@click="mutate()"
-						@keydown.prevent>
+						@keydown.prevent="mutate">
 						Mutate - Chance: {{ format(chance.times(100)) }}%
 					</button>
 				</div>
