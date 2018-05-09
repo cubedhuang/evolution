@@ -161,6 +161,7 @@ new Vue({
 		},
 
 		evolve() {
+			this.evolveReq = this.evolveReq.times(1000);
 			this.stage++;
 		},
 
