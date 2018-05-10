@@ -204,11 +204,11 @@ new Vue({
 				upgrade.level = upgrade.level.plus(1);
 
 				switch (upgrade.prgm) {
-				case "chance":
-					this.chance = this.chance.plus((1 - this.chance) / 7.5);
-					break;
-				case "gain":
-					this.gain = this.gain.times(2);
+					case "chance":
+						this.chance = this.chance.plus((1 - this.chance) / 7.5);
+						break;
+					case "gain":
+						this.gain = this.gain.times(2);
 				}
 			}
 		},

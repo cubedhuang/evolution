@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<head>
-			<title>Evolution</title>
+			<title>Evolution Beta</title>
 	
 			<link rel="apple-touch-icon" sizes="57x57"
 				href="https://cubedhuang.com/apple-icon-57x57.png">
@@ -62,7 +62,7 @@
 		<p>
 			<br>
 			<a href="https://cubedhuang.com" class="btn btn-outline-primary" role="button">Back</a>
-			<a href="/reference/" class="btn btn-outline-success" role="button">Reference</a>
+			<a href="/reference/" target="_blank" class="btn btn-outline-success" role="button">Reference</a>
 		</p>
 
 		<div id="app">
@@ -70,12 +70,14 @@
 				<div class="col-12">
 					<h1>
 						Evolution of {{ stages[stage] }} -
-						{{ format(total.div(evolveReq).times(100)) }}%
+						{{ format(totalNow.div(evolveReq).times(100)) }}%
 					</h1>
+
+					<p class="small">This is a beta version. It is incomplete and there are several bugs.</p>
 
 					<button
 						class="btn btn-outline-primary btn-lg btn-block"
-						v-if="total.gte(evolveReq)"
+						v-if="totalNow.gte(evolveReq)"
 						@click="evolve">
 						EVOLVE - Become {{ stages[stage + 1] }}, with a 5x boost
 						<br>
@@ -107,7 +109,7 @@
 							class="float-right notification green"
 							v-if="showNotification &amp;&amp; notificationStatus"
 							>
-							+{{ format(gain) }}
+							+{{ format(gain.times(multiplier)) }}
 						</p>
 						<p
 							class="float-right notification red"
