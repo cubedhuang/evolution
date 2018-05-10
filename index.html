@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="game">
 	<head>
 		<head>
 			<title>Evolution Beta</title>
@@ -49,72 +49,51 @@
 			</script>
 	
 			<link
-				href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-				rel="stylesheet"
-				integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-				crossorigin="anonymous">
+				href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+				rel="stylesheet">
 			<link rel="stylesheet" href="resources/animate.min.css">
 			<link rel="stylesheet" href="style.css">
 		</head>
 	</head>
 
 	<body class="container">
-		<p>
-			<br>
-			<a href="https://cubedhuang.com" class="btn btn-outline-primary" role="button">Back</a>
-			<a href="/reference/" target="_blank" class="btn btn-outline-success" role="button">Reference</a>
-		</p>
-
 		<div id="app">
 			<div class="row">
 				<div class="col-12">
-					<h1>
-						Evolution of {{ stages[stage] }} -
-						{{ format(totalNow.div(evolveReq).times(100)) }}%
-					</h1>
-
-					<p class="small">This is a beta version. It is incomplete and there are several bugs.</p>
-
-					<button
-						class="btn btn-outline-primary btn-lg btn-block"
-						v-if="totalNow.gte(evolveReq)"
-						@click="evolve">
-						EVOLVE - Become {{ stages[stage + 1] }}, with a 5x boost
-						<br>
-						<div class="small">Progress is not reset.</div>
-					</button>
-					<button
-						class="btn btn-outline-primary btn-lg btn-block"
-						v-if="this.wisdomGain.gte(5)"
-						@click="ascend">
-						ASCEND - Return to Prokaryotes with a {{ format(wisdomGain) }}x more wisdom
-						<br>
-						<div class="small">
-							Current: {{ format(wisdom) }} &raquo; New: {{ format(wisdom.plus(wisdomGain)) }}
-						</div>
-					</button>
+						<nav class="navbar navbar-dark bg-primary">
+							<span class="navbar-text">
+								Efficiency: {{ format(eff) }}
+							</span>
+							<span class="navbar-text">
+								Wisdom: {{ format(wisdom) }}
+							</span>
+						</nav>
 				</div>
 			</div>
-
-			<hr>
+			
+			<br>
 
 			<div class="row">
 				<div class="col-12">
-					<h3 class="float-left">{{ format(eff) }} Efficiency</h3>
+					<h1>
+						Evolution of {{ stages[stage] }}
+					</h1>
+
+					<p class="float-left">
+						This is a beta version. It is incomplete and there are several bugs.
+					</p>
 
 					<transition
-						enter-active-class="animated fadeInDown"
-						leave-active-class="animated fadeOutDown">
+						enter-active-class="animated zoomIn"
+						leave-active-class="animated zoomOut">
 						<p
 							class="float-right notification green"
-							v-if="showNotification &amp;&amp; notificationStatus"
-							>
+							v-if="showGainNote &amp;&amp; gainNoteStatus">
 							+{{ format(gain.times(multiplier)) }}
 						</p>
 						<p
 							class="float-right notification red"
-							v-else-if="showNotification"
-							>
+							v-else-if="showGainNote">
 							0
 						</p>
 					</transition>
@@ -125,51 +104,165 @@
 						@keydown.prevent>
 						Mutate - Chance: {{ format(chance.times(100)) }}%
 					</button>
-				</div>
-			</div>
-
-			<hr>
-
-			<div class="row">
-				<div class="col-12">
-					<h3>Upgrades</h3>
 					
-					<button
-						class="btn btn-warning btn-block"
-						v-for="(up, id) in upgrades"
-						@click="getUpgrade(id)">
-						{{ up.name[stage] }} -
-						Level {{ format(up.level) }} -
-						{{ up.effect }} -
-						Cost: {{ format(up.cost) }} Efficiency
-					</button>
+					<br>
+
+					<nav class="nav nav-pills">
+						<a
+							class="nav-link"
+							:class="[menu === 0 ? 'active' : '']"
+							href="#"
+							@click.prevent="menu = 0">
+							Species
+						</a>
+						<a
+							class="nav-link"
+							:class="[menu === 1 ? 'active' : '']"
+							href="#"
+							@click.prevent="menu = 1">
+							Advancements
+						</a>
+						<a
+							class="nav-link"
+							:class="[menu === 2 ? 'active' : '']"
+							href="#"
+							@click.prevent="menu = 2">
+							Settings
+						</a>
+					</nav>
 				</div>
 			</div>
 
-			<hr>
+			<br>
 
-			<div class="row">
-				<div class="col-12">
-					<h3>Automata</h3>
-
-					<button
-						class="btn btn-danger btn-block"
-						v-for="(auto, id) in automata"
-						v-if="stage >= auto.unlocked"
-						@click="getAutomata(id)">
-						{{ format(auto.amount) }}
-						{{ auto.name[stage] }} -
-						{{ format(auto.eps.times(multiplier)) }} EPS -
-						Total {{ format(auto.eps.times(multiplier).times(auto.amount)) }} EPS -
-						Cost: {{ format(auto.cost) }} Efficiency
-					</button>
+			<transition
+				enter-active-class="animated zoomIn"
+				leave-active-class="animated flipOutX"
+				mode="out-in">
+				<div v-if="menu === 0" key="species">
+					<div class="row">
+						<div class="col-12">
+							<h2>Upgrades</h2>
+							
+							<button
+								class="btn btn-warning btn-block"
+								v-for="(up, id) in upgrades"
+								@click="getUpgrade(id)">
+								{{ up.name[stage] }} -
+								Level {{ format(up.level) }} -
+								{{ up.effect }} -
+								Cost: {{ format(up.cost) }} Efficiency
+							</button>
+						</div>
+					</div>
+		
+					<hr>
+		
+					<div class="row">
+						<div class="col-12">
+							<h2>Automata</h2>
+		
+							<button
+								class="btn btn-danger btn-block"
+								v-for="(auto, id) in automata"
+								v-if="stage >= auto.unlocked"
+								@click="getAutomata(id)">
+								{{ format(auto.amount) }}
+								{{ auto.name[stage] }} -
+								{{ format(auto.eps.times(multiplier)) }} EPS -
+								Total {{ format(auto.eps.times(multiplier).times(auto.amount)) }} EPS -
+								Cost: {{ format(auto.cost) }} Efficiency
+							</button>
+						</div>
+					</div>
 				</div>
-			</div>
+
+				<div v-if="menu === 1" key="advancements">
+					<div class="row">
+						<div class="col-12">
+							<h4>Overall Multiplier: {{ format(multiplier) }}</h4>
+						</div>
+					</div>
+
+					<br>
+
+					<div class="row">
+						<div class="col-12">
+							<h2>Evolving</h2>
+							<p>
+								Next Stage: {{ stages[stage + 1] }}.
+								When you become {{ stages[stage + 1] }},
+								you will have a total of {{ format(Decimal.pow(5, stage)) }}x
+								multiplier from evolving.
+							</p>
+
+							<p v-if="totalNow.lt(evolveReq)">
+								Status: {{ format(totalNow) }} /
+								{{ format(evolveReq) }} efficiency
+								<br>
+								{{ format(totalNow.div(evolveReq).times(100)) }}%
+								to next species.
+							</p>
+
+							<template v-else>
+								<button
+									class="btn btn-outline-primary btn-lg btn-block"
+									@click="evolve">
+									Evolve to {{ stages[stage + 1] }}
+								</button>
+								<p class="small">Progress is not reset when you evolve.</p>
+							</template>
+						</div>
+					</div>
+				
+					<hr>
+					
+					<div class="row">
+						<div class="col-12">
+							<h2>Ascension</h2>
+							<p>
+								Ascension will restart the time sequence, but you will retain wisdom.
+								Wisdom is a multiplier that will make your progress faster.
+								Right now, you have {{ format(wisdom) }} wisdom.
+								This creates an overall {{ format(wisdom) }}x multiplier.
+							</p>
+
+							<template v-if="this.wisdomGain.gte(2)">
+								<button
+									class="btn btn-outline-primary btn-lg btn-block"
+									@click="ascend">
+									ASCEND - Restart the Time Sequence
+								</button>
+								<p class="small">
+									You will gain {{ format(wisdomGain) }} wisdom.
+									Current:
+									{{ format(wisdom) }} &raquo; New: {{ format(wisdom.plus(wisdomGain)) }}
+								</p>
+							</template>
+
+							<p v-else>
+								Gain more efficiency to Ascend.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<div v-if="menu === 2" key="settings">
+					<div class="row">
+						<div class="col-12">
+								<p>
+									<a href="https://cubedhuang.com" class="btn btn-outline-primary" role="button">Back to CubeDHuang</a>
+									<a href="/reference/" target="_blank" class="btn btn-outline-success" role="button">Reference</a>
+								</p>
+						</div>
+					</div>
+				</div>
+			</transition>
 		</div>
 
 		<script src="/resources/decimal.min.js"></script>
 		<script src="/resources/format.min.js"></script>
-		<script src="/resources/vue.min.js"></script>
+		<script src="/resources/vue.dev.js"></script>
 		<script src="script.js"></script>
 	</body>
 </html>

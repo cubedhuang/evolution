@@ -28,9 +28,13 @@ html {
 	overflow-x: hidden;
 }
 
+.game {
+	overflow-y: scroll;
+}
+
 * { font-family: "Open Sans", "Lato", Arial, Helvetica, sans-serif !important; }
 
-h1, h2, h3 { font-weight: 300; }
+h1, h2, h3, h4 { font-weight: 300; }
 
 .hidden {
 	opacity: 0;
@@ -42,4 +46,12 @@ h1, h2, h3 { font-weight: 300; }
 
 .green {
 	color: #28a745;
+}
+
+.navbar-dark .navbar-text {
+	color: white;
+}
+
+.nav-pills a {
+	transition: color 0.4s, background 0.4s;
 }

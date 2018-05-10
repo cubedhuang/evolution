@@ -23,6 +23,8 @@ new Vue({
 		chance: new Decimal(0.25),
 		gain: new Decimal(1),
 
+		menu: 0,
+
 		evolveReq: new Decimal(1000),
 		stage: 0,
 		stages: [
@@ -117,9 +119,11 @@ new Vue({
 			},
 		],
 
-		showNotification: false,
-		notificationID: null,
-		notificationStatus: true
+		showGainNote: false,
+		gainNoteID: null,
+		gainNoteStatus: true,
+
+		Decimal: Decimal
 	},
 
 	computed: {
@@ -152,12 +156,12 @@ new Vue({
 				let gain = this.gain.times(this.multiplier);
 				this.eff = this.eff.plus(gain);
 
-				this.notificationStatus = true;
-			} else this.notificationStatus = false;
+				this.gainNoteStatus = true;
+			} else this.gainNoteStatus = false;
 			
-			this.showNotification = true;
-			if (this.notificationID !== null) clearTimeout(this.notificationID);
-			this.notificationID = setTimeout(() => this.showNotification = false, 500);
+			this.showGainNote = true;
+			if (this.gainNoteID !== null) clearTimeout(this.gainNoteID);
+			this.gainNoteID = setTimeout(() => this.showGainNote = false, 1000);
 		},
 
 		evolve() {
