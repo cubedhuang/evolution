@@ -122,7 +122,7 @@
 					<button
 						class="btn btn-success btn-lg btn-block"
 						@click="mutate()"
-						@keydown.prevent="mutate">
+						@keydown.prevent>
 						Mutate - Chance: {{ format(chance.times(100)) }}%
 					</button>
 				</div>
@@ -158,7 +158,7 @@
 						v-if="stage >= auto.unlocked"
 						@click="getAutomata(id)">
 						{{ format(auto.amount) }}
-						{{ auto.name }} -
+						{{ auto.name[stage] }} -
 						{{ format(auto.eps.times(multiplier)) }} EPS -
 						Total {{ format(auto.eps.times(multiplier).times(auto.amount)) }} EPS -
 						Cost: {{ format(auto.cost) }} Efficiency

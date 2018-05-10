@@ -100,7 +100,7 @@ new Vue({
 
 		automata: [
 			{
-				name: "Antivirus",
+				name: ["Antivirus"],
 				amount: new Decimal(0),
 				eps: new Decimal(1),
 				cost: new Decimal(15),
@@ -108,7 +108,7 @@ new Vue({
 				unlocked: 0
 			},
 			{
-				name: "Protein Control",
+				name: ["Protein Control"],
 				amount: new Decimal(0),
 				eps: new Decimal(5),
 				cost: new Decimal(100),
