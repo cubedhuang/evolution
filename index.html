@@ -168,7 +168,10 @@
 								v-if="stage >= auto.unlocked"
 								@click="getAutomata(id)">
 								{{ format(auto.amount) }}
-								{{ auto.name[stage] }} -
+								{{ auto.name[0] }} - <!-- TODO -->
+								<!-- TODO ^ -->
+								<!-- TODO \ -->
+								<!-- TODO \ -->
 								{{ format(auto.eps.times(multiplier)) }} EPS -
 								Total {{ format(auto.eps.times(multiplier).times(auto.amount)) }} EPS -
 								Cost: {{ format(auto.cost) }} Efficiency
@@ -232,12 +235,14 @@
 									class="btn btn-outline-primary btn-lg btn-block"
 									@click="ascend">
 									ASCEND - Restart the Time Sequence
+									<br>
+									<span class="small">
+										You will gain {{ format(wisdomGain) }} wisdom.
+										<br>
+										Current:
+										{{ format(wisdom) }} &raquo; New: {{ format(wisdom.plus(wisdomGain)) }}
+									</span>
 								</button>
-								<p class="small">
-									You will gain {{ format(wisdomGain) }} wisdom.
-									Current:
-									{{ format(wisdom) }} &raquo; New: {{ format(wisdom.plus(wisdomGain)) }}
-								</p>
 							</template>
 
 							<p v-else>

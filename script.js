@@ -176,17 +176,17 @@ new Vue({
 			this.evolveReq = new Decimal(1000);
 			this.totalNow = new Decimal(0);
 			this.stage = 0;
-
+			
 			for (let i = 0; i < this.automata.length; i++) {
 				this.automata[i].amount = new Decimal(0);
 				this.automata[i].cost = new Decimal(this.automata[i].ocost);
 			}
-
+			
 			for (let i = 0; i < this.upgrades.length; i++) {
 				this.upgrades[i].level = new Decimal(1);
 				this.upgrades[i].cost = new Decimal(this.upgrades[i].ocost);
 			}
-
+			
 			this.wisdom = this.wisdom.plus(this.wisdomGain);
 		},
 
