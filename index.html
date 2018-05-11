@@ -238,17 +238,17 @@
 							<p>
 								Next Stage: {{ stages[stage + 1] }}.
 								Right now
-								you have a total of {{ format(Decimal.pow(5, stage)) }}x
+								you have a {{ format(Decimal.pow(5, stage)) }}x
 								multiplier from evolving.
 								When you evolve to {{ stages[stage + 1] }},
 								you will have a total of {{ format(Decimal.pow(5, stage + 1)) }}x
 							</p>
 
-							<p v-if="totalNow.lt(evolveReq)">
-								Status: {{ format(totalNow) }} /
+							<p v-if="eff.lt(evolveReq)">
+								Status: {{ format(eff) }} /
 								{{ format(evolveReq) }} energy
 								<br>
-								{{ format(totalNow.div(evolveReq).times(100)) }}%
+								{{ format(eff.div(evolveReq).times(100)) }}%
 								to next species.
 							</p>
 
