@@ -29,7 +29,7 @@ new Vue({
 		upgradeMenu: 0,
 		automataMenu: 0,
 
-		evolveReq: new Decimal(1000000),
+		evolveReq: new Decimal(1000),
 		stage: 0,
 		stages: [
 			"Prokaryotes",
@@ -172,7 +172,7 @@ new Vue({
 		},
 
 		evolve() {
-			this.evolveReq = this.evolveReq.pow(1.3);
+			this.evolveReq = this.evolveReq.times(1000);
 			this.stage++;
 			if (this.stage > this.highestStage) this.highestStage = this.stage;
 		},
