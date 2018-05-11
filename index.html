@@ -60,14 +60,17 @@
 		<div id="app">
 			<div class="row">
 				<div class="col-12">
-						<nav class="navbar navbar-dark bg-primary">
-							<span class="navbar-text">
-								Efficiency: {{ format(eff) }}
-							</span>
-							<span class="navbar-text">
-								Wisdom: {{ format(wisdom) }}
-							</span>
-						</nav>
+					<nav class="navbar navbar-dark bg-primary">
+						<span class="navbar-text">
+							Energy: {{ format(energy) }}
+						</span>
+						<span class="navbar-text">
+							Efficiency: {{ format(eff) }}
+						</span>
+						<span class="navbar-text">
+							Wisdom: {{ format(wisdom) }}
+						</span>
+					</nav>
 				</div>
 			</div>
 			
@@ -82,27 +85,13 @@
 					<p class="float-left">
 						This is a beta version. It is incomplete and there are several bugs.
 					</p>
-
-					<transition
-						enter-active-class="animated zoomIn"
-						leave-active-class="animated zoomOut">
-						<p
-							class="float-right notification green"
-							v-if="showGainNote &amp;&amp; gainNoteStatus">
-							+{{ format(gain.times(multiplier)) }}
-						</p>
-						<p
-							class="float-right notification red"
-							v-else-if="showGainNote">
-							0
-						</p>
-					</transition>
 					
 					<button
 						class="btn btn-success btn-lg btn-block"
+						:class="[canMutate ? '' : 'disabled']"
 						@click="mutate()"
 						@keydown.prevent>
-						Mutate - Chance: {{ format(chance.times(100)) }}%
+						Mutate - Speed: {{ speed.div(1000).toString() }} Second
 					</button>
 					
 					<br>
@@ -149,17 +138,41 @@
 				<div v-if="menu === 0" key="species">
 					<div class="row">
 						<div class="col-12">
-							<h2>Upgrades</h2>
-							
-							<button
-								class="btn btn-warning btn-block"
-								v-for="(up, id) in upgrades"
-								@click="getUpgrade(id)">
-								{{ up.name[stage] }} -
-								Level {{ format(up.level) }} -
-								{{ up.effect }} -
-								Cost: {{ format(up.cost) }} Efficiency
-							</button>
+							<h2 class="text-center">Upgrades</h2>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-3">
+							<nav class="nav nav-pills flex-column select-menu">
+								<a
+									v-for="(up, id) in upgrades"
+									class="nav-link"
+									:class="[upgradeMenu === id ? 'active bg-warning' : 'text-warning']"
+									href="#"
+									@click.prevent="upgradeMenu = id">
+									{{ up.name[stage] }}
+								</a>
+							</nav>
+						</div>
+
+						<div class="col-9">
+							<template>
+								<h3>{{ currentUpgrade.name[stage] }}</h3>
+								<p>
+									Level: {{ format(currentUpgrade.level) }}
+									<br>
+									Effect: {{ currentUpgrade.effect }}
+									<br>
+									Cost: {{ format(currentUpgrade.cost) }} Energy
+								</p>
+								<button
+									class="btn btn-warning btn-block"
+									v-if="energy.gte(currentUpgrade.cost)"
+									@click="getUpgrade()">
+									Buy 1
+								</button>
+								<p v-else>You need more energy to level up.</p>
+							</template>
 						</div>
 					</div>
 		
@@ -167,22 +180,45 @@
 		
 					<div class="row">
 						<div class="col-12">
-							<h2>Automata</h2>
-		
+							<h2 class="text-center">Automata</h2>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-3">
+							<nav class="nav nav-pills flex-column select-menu">
+								<a
+									v-for="(auto, id) in automata"
+									v-if="auto.unlocked >= stage"
+									class="nav-link"
+									:class="[automataMenu === id ? 'active bg-danger' : 'text-danger']"
+									href="#"
+									@click.prevent="automataMenu = id">
+									{{ auto.name[stage] }}
+								</a>
+							</nav>
+						</div>
+						<div class="col-9">
+							<h3>{{ currentAutomata.name[0] }}</h3>
+							<p>
+								Amount: {{ format(currentAutomata.amount) }}
+								<br>
+								EPS per {{ currentAutomata.name[0] }}:
+								{{ format(currentAutomata.eps.times(multiplier)) }}
+								<br>
+								Total EPS:
+								{{ format(currentAutomata.eps.times(multiplier).times(currentAutomata.amount)) }}
+								<br>
+								Cost: {{ format(currentAutomata.cost) }} Energy
+							</p>
 							<button
 								class="btn btn-danger btn-block"
-								v-for="(auto, id) in automata"
-								v-if="stage >= auto.unlocked"
-								@click="getAutomata(id)">
-								{{ format(auto.amount) }}
-								{{ auto.name[0] }} - <!-- TODO -->
-								<!-- TODO ^ -->
-								<!-- TODO \ -->
-								<!-- TODO \ -->
-								{{ format(auto.eps.times(multiplier)) }} EPS -
-								Total {{ format(auto.eps.times(multiplier).times(auto.amount)) }} EPS -
-								Cost: {{ format(auto.cost) }} Efficiency
+								v-if="energy.gte(currentAutomata.cost)"
+								@click="getAutomata()">
+								Create 1 {{ currentAutomata.name[0] }}
 							</button>
+							<p v-else>
+								You need more energy to create one.
+							</p>
 						</div>
 					</div>
 				</div>
@@ -210,7 +246,7 @@
 
 							<p v-if="totalNow.lt(evolveReq)">
 								Status: {{ format(totalNow) }} /
-								{{ format(evolveReq) }} efficiency
+								{{ format(evolveReq) }} energy
 								<br>
 								{{ format(totalNow.div(evolveReq).times(100)) }}%
 								to next species.
@@ -255,7 +291,7 @@
 							</template>
 
 							<p v-else>
-								Gain more efficiency to Ascend.
+								Gain more energy to Ascend.
 							</p>
 						</div>
 					</div>
@@ -264,13 +300,15 @@
 				<div v-if="menu === 2" key="stats">
 					<div class="row">
 						<div class="col-12">
-							<h2>Efficiency</h2>
+							<h2>Energy</h2>
 							<p>
+								Energy: {{ format(energy) }}
+								<br>
 								Efficiency: {{ format(eff) }}
 								<br>
-								Total Efficiency This Ascension: {{ format(totalNow) }}
+								Total Energy This Ascension: {{ format(totalNow) }}
 								<br>
-								Total Efficiency Ever: {{ format(total) }}
+								Total Energy Ever: {{ format(total) }}
 							</p>
 
 							<h2>Evolution</h2>

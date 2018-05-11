@@ -48,10 +48,28 @@ h1, h2, h3, h4 { font-weight: 300; }
 	color: #28a745;
 }
 
+.navbar-dark {
+	border-bottom-left-radius: 0.3rem !important;
+	border-bottom-right-radius: 0.3rem !important;
+}
+
 .navbar-dark .navbar-text {
 	color: white;
 }
 
-.nav-pills a {
-	transition: color 0.4s, background 0.4s;
+.nav-pills a, .select-menu a {
+	transition: color 0.2s, background 0.2s;
+}
+
+.overlap {
+	position: absolute;
+	top: 0;
+}
+
+.select-menu a {
+	margin-bottom: 5px;
+}
+
+.bg-warning {
+	color: #212529 !important;
 }
