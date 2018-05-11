@@ -188,7 +188,7 @@
 							<nav class="nav nav-pills flex-column select-menu">
 								<a
 									v-for="(auto, id) in automata"
-									v-if="auto.unlocked >= stage"
+									v-if="stage >= auto.unlocked"
 									class="nav-link"
 									:class="[automataMenu === id ? 'active bg-danger' : 'text-danger']"
 									href="#"
@@ -246,7 +246,7 @@
 
 							<p v-if="eff.lt(evolveReq)">
 								Status: {{ format(eff) }} /
-								{{ format(evolveReq) }} energy
+								{{ format(evolveReq) }} efficiency
 								<br>
 								{{ format(eff.div(evolveReq).times(100)) }}%
 								to next species.
@@ -275,7 +275,7 @@
 								This creates an overall {{ format(wisdom) }}x multiplier.
 							</p>
 
-							<template v-if="this.wisdomGain.gte(2)">
+							<template v-if="this.wisdomGain.gte(1)">
 								<button
 									class="btn btn-outline-primary btn-lg btn-block"
 									@click="ascend">
