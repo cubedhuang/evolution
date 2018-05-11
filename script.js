@@ -201,11 +201,9 @@ new Vue({
 		},
 
 		update() {
-			this.energy = this.energy.plus(this.eff);
+			this.energy = this.energy.plus(this.eff.times(this.multiplier));
 			for (let i = 0; i < this.automata.length; i++) {
-				let gain = this.automata[i].eps.
-					times(this.automata[i].amount).
-					times(this.multiplier);
+				let gain = this.automata[i].eps.times(this.automata[i].amount);
 				this.eff = this.eff.plus(gain);
 			}
 		},
