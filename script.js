@@ -8,7 +8,7 @@ numberformat.default.opts = {
 
 const format = numberformat.format;
 
-new Vue({
+const dev = new Vue({
 	el: "#app",
 
 	created() {
@@ -150,7 +150,7 @@ new Vue({
 		energy(val) {
 			val = val.toString();
 			if (this.energy.gt(this.prev)) {
-				var diff = this.energy.minus(this.prev);
+				const diff = this.energy.minus(this.prev);
 				this.total = this.total.plus(diff);
 				this.totalNow = this.totalNow.plus(diff);
 			}
@@ -163,7 +163,7 @@ new Vue({
 
 		mutate() {
 			if (this.canMutate) {
-				let gain = this.gain.times(this.multiplier);
+				const gain = this.gain.times(this.multiplier);
 				this.eff = this.eff.plus(gain);
 
 				this.canMutate = false;
@@ -203,7 +203,7 @@ new Vue({
 		update() {
 			this.energy = this.energy.plus(this.eff.times(this.multiplier));
 			for (let i = 0; i < this.automata.length; i++) {
-				let gain = this.automata[i].eps.times(this.automata[i].amount);
+				const gain = this.automata[i].eps.times(this.automata[i].amount);
 				this.eff = this.eff.plus(gain);
 			}
 		},
