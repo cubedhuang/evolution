@@ -46,8 +46,10 @@ new Vue({
 			"Seers",
 			"Shifters",
 		],
+		highestStage: 0,
 		
 		wisdom: new Decimal(1),
+		ascensions: 0,
 
 		upgrades: [
 			{
@@ -167,6 +169,7 @@ new Vue({
 		evolve() {
 			this.evolveReq = this.evolveReq.times(1000);
 			this.stage++;
+			if (this.stage > this.highestStage) this.highestStage = this.stage;
 		},
 
 		ascend() {
@@ -187,6 +190,7 @@ new Vue({
 				this.upgrades[i].cost = new Decimal(this.upgrades[i].ocost);
 			}
 			
+			this.ascensions++;
 			this.wisdom = this.wisdom.plus(this.wisdomGain);
 		},
 

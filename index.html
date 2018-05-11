@@ -127,6 +127,13 @@
 							:class="[menu === 2 ? 'active' : '']"
 							href="#"
 							@click.prevent="menu = 2">
+							Statistics
+						</a>
+						<a
+							class="nav-link"
+							:class="[menu === 3 ? 'active' : '']"
+							href="#"
+							@click.prevent="menu = 3">
 							Settings
 						</a>
 					</nav>
@@ -187,16 +194,18 @@
 						</div>
 					</div>
 
-					<br>
+					<hr>
 
 					<div class="row">
 						<div class="col-12">
 							<h2>Evolving</h2>
 							<p>
 								Next Stage: {{ stages[stage + 1] }}.
-								When you become {{ stages[stage + 1] }},
-								you will have a total of {{ format(Decimal.pow(5, stage)) }}x
+								Right now
+								you have a total of {{ format(Decimal.pow(5, stage)) }}x
 								multiplier from evolving.
+								When you evolve to {{ stages[stage + 1] }},
+								you will have a total of {{ format(Decimal.pow(5, stage + 1)) }}x
 							</p>
 
 							<p v-if="totalNow.lt(evolveReq)">
@@ -252,9 +261,42 @@
 					</div>
 				</div>
 
-				<div v-if="menu === 2" key="settings">
+				<div v-if="menu === 2" key="stats">
 					<div class="row">
 						<div class="col-12">
+							<h2>Efficiency</h2>
+							<p>
+								Efficiency: {{ format(eff) }}
+								<br>
+								Total Efficiency This Ascension: {{ format(totalNow) }}
+								<br>
+								Total Efficiency Ever: {{ format(total) }}
+							</p>
+
+							<h2>Evolution</h2>
+							<p>
+								Current Stage: {{ stages[stage] }}
+								<br>
+								Current Stage Number: {{ stage + 1 }}
+								<br>
+								Highest Stage Ever: {{ highestStage }}
+							</p>
+
+							<h2>Ascensions</h2>
+							<p>
+								Wisdom: {{ format(wisdom) }}
+								<br>
+								Total Ascensions: {{ ascensions }}
+								<br>
+								Wisdom Gained After Ascension: {{ format(wisdomGain) }}
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<div v-if="menu === 3" key="settings">
+					<div class="row">
+						<div class="col-12 text-center">
 								<p>
 									<a href="https://cubedhuang.com" class="btn btn-outline-primary" role="button">Back to CubeDHuang</a>
 									<a href="/reference/" target="_blank" class="btn btn-outline-success" role="button">Reference</a>
