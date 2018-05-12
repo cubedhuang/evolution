@@ -203,10 +203,10 @@
 								Amount: {{ format(currentAutomata.amount) }}
 								<br>
 								EPS per {{ currentAutomata.name[stage] }}:
-								{{ format(currentAutomata.eps.times(multiplier)) }}
+								{{ format(currentAutomata.eps.times(wisdom)) }}
 								<br>
 								Total EPS:
-								{{ format(currentAutomata.eps.times(multiplier).times(currentAutomata.amount)) }}
+								{{ format(currentAutomata.eps.times(wisdom).times(currentAutomata.amount)) }}
 								<br>
 								Cost: {{ format(currentAutomata.cost) }} Energy
 							</p>
