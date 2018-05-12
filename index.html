@@ -83,7 +83,7 @@
 					</h1>
 
 					<p class="float-left">
-						This is a beta version. It is incomplete and there are several bugs.
+						This is a beta version. It is incomplete and there are many bugs.
 					</p>
 					
 					<button
@@ -91,7 +91,7 @@
 						:class="[canMutate ? '' : 'disabled']"
 						@click="mutate()"
 						@keydown.prevent>
-						Mutate - Speed: {{ speed.div(1000).toString() }} Second
+						Mutate - Speed: {{ speed.div(1000).toString().slice(0, 4) }} Second
 					</button>
 					
 					<br>
@@ -169,7 +169,7 @@
 									class="btn btn-warning btn-block"
 									v-if="energy.gte(currentUpgrade.cost)"
 									@click="getUpgrade()">
-									Buy 1
+									Level Up
 								</button>
 								<p v-else>You need more energy to level up.</p>
 							</template>

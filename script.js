@@ -8,7 +8,7 @@ numberformat.default.opts = {
 
 const format = numberformat.format;
 
-const dev = new Vue({
+new Vue({
 	el: "#app",
 
 	created() {
@@ -108,7 +108,12 @@ const dev = new Vue({
 
 		automata: [
 			{
-				name: ["Antivirus"],
+				name: [
+					"Heat Absorber",
+					"Metabolism",
+					"Retinal Molecule",
+					"Chlorophyll Molecule",
+				],
 				amount: new Decimal(0),
 				eps: new Decimal(1),
 				cost: new Decimal(10000),
@@ -116,12 +121,30 @@ const dev = new Vue({
 				unlocked: 0
 			},
 			{
-				name: ["Protein Control"],
+				name: [
+					"NOT SHOWN",
+					"Protein Builder",
+					"Protein Builder",
+					"Protein Builder",
+				],
 				amount: new Decimal(0),
 				eps: new Decimal(5),
 				cost: new Decimal(1000000),
 				ocost: new Decimal(1000000),
 				unlocked: 1
+			},
+			{
+				name: [
+					"NOT SHOWN",
+					"NOT SHOWN",
+					"Mitochondria",
+					"Mitochondria",
+				],
+				amount: new Decimal(0),
+				eps: new Decimal(5),
+				cost: new Decimal(100000000), // 100 Million
+				ocost: new Decimal(100000000),
+				unlocked: 2
 			},
 		],
 
