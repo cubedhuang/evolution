@@ -152,8 +152,8 @@ new Vue({
 	},
 
 	computed: {
-		multiplier() {
-			return Decimal.pow(5, this.stage).times(this.wisdom);
+		evMult() {
+			return Decimal.pow(5, this.stage);
 		},
 
 		wisdomGain() {
@@ -186,7 +186,7 @@ new Vue({
 
 		mutate() {
 			if (this.canMutate) {
-				const gain = this.gain.times(this.multiplier);
+				const gain = this.gain.times(this.wisdom);
 				this.eff = this.eff.plus(gain);
 
 				this.canMutate = false;
@@ -205,7 +205,7 @@ new Vue({
 			this.eff = new Decimal(1);
 			this.speed = new Decimal(1000);
 			this.gain = new Decimal(1);
-			this.evolveReq = new Decimal(1000000);
+			this.evolveReq = new Decimal(1000);
 			this.totalNow = new Decimal(0);
 			this.stage = 0;
 			this.automataMenu = 0;
@@ -225,9 +225,9 @@ new Vue({
 		},
 
 		update() {
-			this.energy = this.energy.plus(this.eff.times(this.multiplier));
+			this.energy = this.energy.plus(this.eff.times(this.evMult));
 			for (let i = 0; i < this.automata.length; i++) {
-				const gain = this.automata[i].eps.times(this.automata[i].amount);
+				const gain = this.automata[i].eps.times(this.automata[i].amount).times(this.wisdom);
 				this.eff = this.eff.plus(gain);
 			}
 		},
