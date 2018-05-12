@@ -208,6 +208,7 @@ new Vue({
 			this.evolveReq = new Decimal(1000000);
 			this.totalNow = new Decimal(0);
 			this.stage = 0;
+			this.automataMenu = 0;
 			
 			for (let i = 0; i < this.automata.length; i++) {
 				this.automata[i].amount = new Decimal(0);
