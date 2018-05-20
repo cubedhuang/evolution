@@ -12,10 +12,23 @@ new Vue({
 	el: "#app",
 
 	created() {
-		setInterval(this.update, 1000);
+		this.update();
+
+		this.music.volume = 0.2;
 	},
 
 	data: {
+		music: document.getElementById("background"),
+		sfx: {
+			ascend: document.getElementById("ascend"),
+			automata: document.getElementById("automata"),
+			evolve: document.getElementById("evolve"),
+			mutate: document.getElementById("mutate"),
+			upgrade: document.getElementById("upgrade"),
+		},
+
+		useSfx: true,
+
 		eff: new Decimal(1),
 		energy: new Decimal(0),
 		prev: new Decimal(0),
@@ -29,12 +42,14 @@ new Vue({
 		upgradeMenu: 0,
 		automataMenu: 0,
 
+		prevTime: 0,
+
 		evolveReq: new Decimal(1000),
 		stage: 0,
 		stages: [
 			"Prokaryotes",
 			"Archaea",
-			"Eukaryokes",
+			"Eukaryotes",
 			"Algae",
 			"Reptiles",
 			"Mammals",
@@ -191,6 +206,8 @@ new Vue({
 
 				this.canMutate = false;
 				setTimeout(() => this.canMutate = true, this.speed);
+
+				if (this.useSfx) this.sfx.mutate.play();
 			}
 		},
 
@@ -198,6 +215,8 @@ new Vue({
 			this.evolveReq = this.evolveReq.times(1000);
 			this.stage++;
 			if (this.stage > this.highestStage) this.highestStage = this.stage;
+
+			if (this.useSfx) this.sfx.evolve.play();
 		},
 
 		ascend() {
@@ -208,6 +227,9 @@ new Vue({
 			this.evolveReq = new Decimal(1000000);
 			this.totalNow = new Decimal(0);
 			this.stage = 0;
+
+			this.upgradeMenu = 0;
+			this.automataMenu = 0;
 			
 			for (let i = 0; i < this.automata.length; i++) {
 				this.automata[i].amount = new Decimal(0);
@@ -221,42 +243,49 @@ new Vue({
 			
 			this.ascensions++;
 			this.wisdom = this.wisdom.plus(this.wisdomGain);
+
+			if (this.useSfx) this.sfx.ascend.play();
 		},
 
-		update() {
-			this.energy = this.energy.plus(this.eff.times(this.multiplier));
+		update(now) {
+			let diff = (now - this.prevTime) / 1000 || 0;
+
+			this.energy = this.energy.plus(this.eff.times(this.multiplier).times(diff));
 			for (let i = 0; i < this.automata.length; i++) {
-				const gain = this.automata[i].eps.times(this.automata[i].amount);
+				const gain = this.automata[i].eps.times(this.automata[i].amount).times(diff);
 				this.eff = this.eff.plus(gain);
 			}
+
+			this.prevTime = now;
+			requestAnimationFrame(this.update);
 		},
 
 		getUpgrade() {
-			if (this.energy.gte(this.currentUpgrade.cost)) {
-				const upgrade = this.currentUpgrade;
+			const upgrade = this.currentUpgrade;
 
-				this.energy = this.energy.minus(upgrade.cost);
-				upgrade.cost = upgrade.cost.times(10);
-				upgrade.level = upgrade.level.plus(1);
+			this.energy = this.energy.minus(upgrade.cost);
+			upgrade.cost = upgrade.cost.times(10);
+			upgrade.level = upgrade.level.plus(1);
 
-				switch (upgrade.prgm) {
-					case "speed":
-						this.speed = this.speed.times(0.8);
-						break;
-					case "gain":
-						this.gain = this.gain.times(2);
-				}
+			switch (upgrade.prgm) {
+				case "speed":
+					this.speed = this.speed.times(0.8);
+					break;
+				case "gain":
+					this.gain = this.gain.times(2);
 			}
+
+			if (this.useSfx) this.sfx.upgrade.play();
 		},
 
 		getAutomata() {
-			if (this.energy.gte(this.currentAutomata.cost)) {
-				const auto = this.currentAutomata;
+			const auto = this.currentAutomata;
 
-				this.energy = this.energy.minus(auto.cost);
-				auto.cost = auto.cost.times(1.25).floor();
-				auto.amount = auto.amount.plus(1);
-			}
+			this.energy = this.energy.minus(auto.cost);
+			auto.cost = auto.cost.times(1.25).floor();
+			auto.amount = auto.amount.plus(1);
+
+			if (this.useSfx) this.sfx.automata.play();
 		}
 	}
 });

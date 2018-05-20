@@ -57,6 +57,14 @@
 	</head>
 
 	<body class="container">
+		<audio id="background" src="/audio/background.mp3" autoplay loop></audio>
+
+		<audio id="ascend" src="/audio/ascend.mp3"></audio>
+		<audio id="automata" src="/audio/automata.mp3"></audio>
+		<audio id="evolve" src="/audio/evolve.mp3"></audio>
+		<audio id="mutate" src="/audio/mutate.mp3"></audio>
+		<audio id="upgrade" src="/audio/upgrade.mp3"></audio>
+
 		<div id="app">
 			<div class="row">
 				<div class="col-12">
@@ -317,7 +325,7 @@
 								<br>
 								Current Stage Number: {{ stage + 1 }}
 								<br>
-								Highest Stage Ever: {{ highestStage }}
+								Highest Stage Ever: {{ stages[highestStage] }}
 							</p>
 
 							<h2>Ascensions</h2>
@@ -334,11 +342,29 @@
 
 				<div v-if="menu === 3" key="settings">
 					<div class="row">
-						<div class="col-12 text-center">
-								<p>
-									<a href="https://cubedhuang.com" class="btn btn-outline-primary" role="button">Back to CubeDHuang</a>
-									<a href="/reference/" target="_blank" class="btn btn-outline-success" role="button">Reference</a>
-								</p>
+						<div class="col-12">
+							<p class="text-center">
+								<a
+									href="https://cubedhuang.com"
+									class="btn btn-outline-primary">
+									Back to CubeDHuang
+								</a>
+								<a
+									href="/reference/"
+									target="_blank"
+									class="btn btn-outline-success">
+									Reference
+								</a>
+							</p>
+							<p>
+								Sound Effects: <input type="checkbox" v-model="useSfx">
+								<br>
+								Background Music:
+								<input
+									type="checkbox"
+									:checked="!music.muted"
+									@click="music.muted = !music.muted">
+							</p>
 						</div>
 					</div>
 				</div>
