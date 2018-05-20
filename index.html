@@ -211,10 +211,10 @@
 								Amount: {{ format(currentAutomata.amount) }}
 								<br>
 								EPS per {{ currentAutomata.name[stage] }}:
-								{{ format(currentAutomata.eps.times(multiplier)) }}
+								{{ format(currentAutomata.eps.times(wisdom)) }}
 								<br>
 								Total EPS:
-								{{ format(currentAutomata.eps.times(multiplier).times(currentAutomata.amount)) }}
+								{{ format(currentAutomata.eps.times(wisdom).times(currentAutomata.amount)) }}
 								<br>
 								Cost: {{ format(currentAutomata.cost) }} Energy
 							</p>
@@ -234,20 +234,13 @@
 				<div v-if="menu === 1" key="advancements">
 					<div class="row">
 						<div class="col-12">
-							<h4>Overall Multiplier: {{ format(multiplier) }}</h4>
-						</div>
-					</div>
-
-					<hr>
-
-					<div class="row">
-						<div class="col-12">
 							<h2>Evolving</h2>
 							<p>
 								Next Stage: {{ stages[stage + 1] }}.
-								Right now
+								Right now,
 								you have a {{ format(Decimal.pow(5, stage)) }}x
-								multiplier from evolving.
+								efficiency multiplier from evolving.
+								Evolution will increase the amount of energy you gain per efficiency.
 								When you evolve to {{ stages[stage + 1] }},
 								you will have a total of {{ format(Decimal.pow(5, stage + 1)) }}x
 							</p>
@@ -280,7 +273,9 @@
 								Ascension will restart the time sequence, but you will retain wisdom.
 								Wisdom is a multiplier that will make your progress faster.
 								Right now, you have {{ format(wisdom) }} wisdom.
-								This creates an overall {{ format(wisdom) }}x multiplier.
+								This creates a {{ format(wisdom) }}x multiplier for efficiency gain.
+								Wisdom increases the amount of efficiency that you gain from
+								clicking and automata.
 							</p>
 
 							<template v-if="this.wisdomGain.gte(1)">
