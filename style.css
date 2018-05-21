@@ -26,9 +26,6 @@
 
 html {
 	overflow-x: hidden;
-}
-
-.game {
 	overflow-y: scroll;
 }
 
@@ -36,16 +33,13 @@ html {
 
 h1, h2, h3, h4 { font-weight: 300; }
 
+.logo {
+	width: 100px;
+	height: auto;
+}
+
 .hidden {
 	opacity: 0;
-}
-
-.red {
-	color: #dc3545;
-}
-
-.green {
-	color: #28a745;
 }
 
 .navbar-dark {
@@ -61,15 +55,6 @@ h1, h2, h3, h4 { font-weight: 300; }
 	transition: color 0.2s, background 0.2s;
 }
 
-.overlap {
-	position: absolute;
-	top: 0;
-}
-
 .select-menu a {
 	margin-bottom: 5px;
-}
-
-.bg-warning {
-	color: #212529 !important;
 }

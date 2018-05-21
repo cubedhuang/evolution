@@ -1,38 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" class="game">
+<html lang="en">
 	<head>
 		<head>
 			<title>Evolution Beta</title>
 	
-			<link rel="apple-touch-icon" sizes="57x57"
-				href="https://cubedhuang.com/apple-icon-57x57.png">
-			<link rel="apple-touch-icon" sizes="60x60"
-				href="https://cubedhuang.com/apple-icon-60x60.png">
-			<link rel="apple-touch-icon" sizes="72x72"
-				href="https://cubedhuang.com/apple-icon-72x72.png">
-			<link rel="apple-touch-icon" sizes="76x76"
-				href="https://cubedhuang.com/apple-icon-76x76.png">
-			<link rel="apple-touch-icon" sizes="114x114"
-				href="https://cubedhuang.com/apple-icon-114x114.png">
-			<link rel="apple-touch-icon" sizes="120x120"
-				href="https://cubedhuang.com/apple-icon-120x120.png">
-			<link rel="apple-touch-icon" sizes="144x144"
-				href="https://cubedhuang.com/apple-icon-144x144.png">
-			<link rel="apple-touch-icon" sizes="152x152"
-				href="https://cubedhuang.com/apple-icon-152x152.png">
-			<link rel="apple-touch-icon" sizes="180x180"
-				href="https://cubedhuang.com/apple-icon-180x180.png">
-			<link rel="icon" type="image/png" sizes="192x192"
-				href="https://cubedhuang.com/android-icon-192x192.png">
-			<link rel="icon" type="image/png" sizes="32x32"
-				href="https://cubedhuang.com/favicon-32x32.png">
-			<link rel="icon" type="image/png" sizes="96x96"
-				href="https://cubedhuang.com/favicon-96x96.png">
-			<link rel="icon" type="image/png" sizes="16x16"
-				href="https://cubedhuang.com/favicon-16x16.png">
-			<link rel="manifest" href="https://cubedhuang.com/manifest.json">
+			<link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
+			<link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png">
+			<link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png">
+			<link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png">
+			<link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png">
+			<link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png">
+			<link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png">
+			<link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png">
+			<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png">
+			<link rel="icon" type="image/png" sizes="192x192"  href="/favicon/android-icon-192x192.png">
+			<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+			<link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+			<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+			<link rel="manifest" href="/favicon/manifest.json">
 			<meta name="msapplication-TileColor" content="#ffffff">
-			<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+			<meta name="msapplication-TileImage" content="/favicon/ms-icon-144x144.png">
 			<meta name="theme-color" content="#ffffff">
 	
 			<!-- Global site tag (gtag.js) - Google Analytics -->
@@ -87,7 +74,7 @@
 						Evolution of {{ stages[stage] }}
 					</h1>
 
-					<p class="float-left">
+					<p>
 						This is a beta version. It is incomplete and there are many bugs.
 					</p>
 					
@@ -147,7 +134,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-3">
+						<div class="col-lg-3 col-12">
 							<nav class="nav nav-pills flex-column select-menu">
 								<a
 									v-for="(up, id) in upgrades"
@@ -160,7 +147,7 @@
 							</nav>
 						</div>
 
-						<div class="col-9">
+						<div class="col-lg-9 col-12">
 							<template>
 								<h3>{{ currentUpgrade.name[stage] }}</h3>
 								<p>
@@ -189,7 +176,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-3">
+						<div class="col-lg-3 col-12">
 							<nav class="nav nav-pills flex-column select-menu">
 								<a
 									v-for="(auto, id) in automata"
@@ -202,7 +189,7 @@
 								</a>
 							</nav>
 						</div>
-						<div class="col-9">
+						<div class="col-lg-9 col-12">
 							<h3>{{ currentAutomata.name[stage] }}</h3>
 							<p>
 								Amount: {{ format(currentAutomata.amount) }}
@@ -357,6 +344,8 @@
 									:checked="!music.muted"
 									@click="music.muted = !music.muted">
 							</p>
+
+							<img src="/logo.svg" alt="Evolution Logo" class="logo">
 						</div>
 					</div>
 				</div>
