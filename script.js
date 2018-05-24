@@ -1,37 +1,36 @@
-numberformat.default.opts = {
-	sigfigs: 5,
-	format: "standard",
-	flavor: "short",
-	backend: "decimal.js",
-	Decimal: Decimal
-};
-
-const format = numberformat.format;
-
-new Vue({
+const evolution = new Vue({
 	el: "#app",
 
 	created() {
-		this.update();
-
+		numberformat.default.opts = {
+			sigfigs: 5,
+			format: "standard",
+			flavor: "short",
+			backend: "decimal.js",
+			Decimal: Decimal
+		};
 		this.music.volume = 0.2;
+
+		this.update();
 	},
 
 	data: {
 		music: document.getElementById("background"),
 		sfx: {
-			ascend: document.getElementById("ascend"),
-			automata: document.getElementById("automata"),
-			evolve: document.getElementById("evolve"),
-			mutate: document.getElementById("mutate"),
-			upgrade: document.getElementById("upgrade"),
+			ascend: new Audio("/audio/ascend.mp3"),
+			automata: new Audio("/audio/automata.mp3"),
+			evolve: new Audio("/audio/evolve.mp3"),
+			mutate: new Audio("/audio/mutate.mp3"),
+			switchitem: new Audio("/audio/switchitem.mp3"),
+			switchmenu: new Audio("/audio/switchmenu.mp3"),
+			upgrade: new Audio("/audio/upgrade.mp3"),
 		},
 
 		useSfx: true,
 
 		eff: new Decimal(1),
 		energy: new Decimal(0),
-		prev: new Decimal(0),
+		prevEnergy: new Decimal(0),
 		totalNow: new Decimal(0),
 		total: new Decimal(0),
 		speed: new Decimal(1000),
@@ -187,17 +186,31 @@ new Vue({
 	watch: {
 		energy(val) {
 			val = val.toString();
-			if (this.energy.gt(this.prev)) {
-				const diff = this.energy.minus(this.prev);
+			if (this.energy.gt(this.prevEnergy)) {
+				const diff = this.energy.minus(this.prevEnergy);
 				this.total = this.total.plus(diff);
 				this.totalNow = this.totalNow.plus(diff);
 			}
-			this.prev = this.energy;
+			this.prevEnergy = this.energy;
+		},
+		
+		upgradeMenu() {
+			if (this.useSfx) this.sfx.switchitem.play();
+		},
+		automataMenu() {
+			if (this.useSfx) this.sfx.switchitem.play();
+		},
+		menu() {
+			if (this.useSfx) {
+				this.sfx.switchmenu.pause();
+				this.sfx.switchmenu.currentTime = 0;
+				this.sfx.switchmenu.play();
+			}
 		}
 	},
 
 	methods: {
-		format: format,
+		format: numberformat.format,
 
 		mutate() {
 			if (this.canMutate) {
