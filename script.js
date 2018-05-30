@@ -33,7 +33,7 @@ const evolution = new Vue({
 		prevEnergy: new Decimal(0),
 		totalNow: new Decimal(0),
 		total: new Decimal(0),
-		speed: new Decimal(1000),
+		speed: new Decimal(500),
 		canMutate: true,
 		gain: new Decimal(1),
 
@@ -46,23 +46,23 @@ const evolution = new Vue({
 		evolveReq: new Decimal(1000),
 		stage: 0,
 		stages: [
-			"Prokaryotes",
-			"Archaea",
-			"Eukaryotes",
-			"Algae",
-			"Reptiles",
-			"Mammals",
-			"Monkeys",
-			"Cavemen",
-			"Humans",
-			"AI",
-			"Energy",
-			"Creators",
-			"Corruptors",
-			"Protectors",
-			"Infinities",
-			"Seers",
-			"Shifters",
+			"Archaebacteria",
+			"Eukaryota",
+			"Platyhelminthes",
+			"Haikouichthys",
+			"Acanthostega",
+			"Phthinosuchus",
+			"Ouranopithicus",
+			"Homo Erectus",
+			"Homo Sapiens Sapiens",
+			"Artificial Intelligence",
+			"Intelligent Energy",
+			"Universe Creators",
+			"Universe Corruptors",
+			"Multiverse Protectors",
+			"Omniverse Infinities",
+			"Dimensional Seers",
+			"Dimensional Shifters",
 		],
 		highestStage: 0,
 		
@@ -90,8 +90,8 @@ const evolution = new Vue({
 				],
 				level: new Decimal(1),
 				effect: "Increases Speed",
-				cost: new Decimal(100),
-				ocost: new Decimal(100),
+				cost: new Decimal(10),
+				ocost: new Decimal(10),
 				prgm: "speed"
 			},
 			{
@@ -114,8 +114,8 @@ const evolution = new Vue({
 				],
 				level: new Decimal(1),
 				effect: "More Energy Gain",
-				cost: new Decimal(1000),
-				ocost: new Decimal(1000),
+				cost: new Decimal(100),
+				ocost: new Decimal(100),
 				prgm: "gain"
 			},
 		],
@@ -124,40 +124,58 @@ const evolution = new Vue({
 			{
 				name: [
 					"Heat Absorber",
-					"Metabolism",
-					"Retinal Molecule",
-					"Chlorophyll Molecule",
+					"Metabolism Process",
+					"Metabolism Process",
+					"Metabolism Process",
+					"Metabolism Process",
+					"Metabolism Process",
+					"Metabolism Process",
+					"Metabolism Process",
+					"Metabolism Process",
+					"Energy Source",
 				],
 				amount: new Decimal(0),
 				eps: new Decimal(1),
-				cost: new Decimal(10000),
-				ocost: new Decimal(10000),
+				cost: new Decimal(1000),
+				ocost: new Decimal(1000),
 				unlocked: 0
 			},
 			{
 				name: [
 					"NOT SHOWN",
-					"Protein Builder",
-					"Protein Builder",
-					"Protein Builder",
+					"Mitochondria",
+					"Integument System",
+					"Circulatory Management",
+					"Nerve",
+					"Nerve",
+					"Nerve Group",
+					"Brain Nerve Group",
+					"Brain Nerve Group",
+					"Neural Network Node",
 				],
 				amount: new Decimal(0),
 				eps: new Decimal(5),
-				cost: new Decimal(1000000),
-				ocost: new Decimal(1000000),
+				cost: new Decimal(100000),
+				ocost: new Decimal(100000),
 				unlocked: 1
 			},
 			{
 				name: [
 					"NOT SHOWN",
 					"NOT SHOWN",
-					"Mitochondria",
-					"Mitochondria",
+					"Protein Builder",
+					"Protein Builder",
+					"Protein Builder",
+					"Protein Builder",
+					"Protein Builder",
+					"Protein Builder",
+					"Protein Builder",
+					"Learning Algorithm",
 				],
 				amount: new Decimal(0),
 				eps: new Decimal(5),
-				cost: new Decimal(100000000), // 100 Million
-				ocost: new Decimal(100000000),
+				cost: new Decimal(10000000), // 10 Million
+				ocost: new Decimal(10000000),
 				unlocked: 2
 			},
 		],
@@ -282,7 +300,7 @@ const evolution = new Vue({
 
 			switch (upgrade.prgm) {
 				case "speed":
-					this.speed = this.speed.times(0.8);
+					this.speed = this.speed.times(0.6);
 					break;
 				case "gain":
 					this.gain = this.gain.times(2);
