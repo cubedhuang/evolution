@@ -9,48 +9,32 @@ const evolution = new Vue({
 			backend: "decimal.js",
 			Decimal: Decimal
 		};
-		this.music.volume = 0.2;
 
 		this.update();
 	},
 
 	data: {
-		music: document.getElementById("background"),
-		sfx: {
-			ascend: new Audio("/audio/ascend.mp3"),
-			automata: new Audio("/audio/automata.mp3"),
-			evolve: new Audio("/audio/evolve.mp3"),
-			mutate: new Audio("/audio/mutate.mp3"),
-			switchitem: new Audio("/audio/switchitem.mp3"),
-			switchmenu: new Audio("/audio/switchmenu.mp3"),
-			upgrade: new Audio("/audio/upgrade.mp3"),
-		},
-
-		useSfx: true,
-
 		eff: new Decimal(1),
 		energy: new Decimal(0),
 		prevEnergy: new Decimal(0),
 		totalNow: new Decimal(0),
 		total: new Decimal(0),
 		speed: new Decimal(500),
-		canMutate: true,
-		gain: new Decimal(1),
-
+		
 		menu: 0,
 		upgradeMenu: 0,
-		automataMenu: 0,
-
+		fluctuatorMenu: 0,
+		
 		prevTime: 0,
 
 		evolveReq: new Decimal(1000),
 		stage: 0,
 		stages: [
-			"Archaebacteria",
-			"Eukaryota",
-			"Platyhelminthes",
-			"Haikouichthys",
-			"Acanthostega",
+			"Planck Epoch",
+			"Grand Unification Epoch",
+			"Electroweak Epoch",
+			"Inflationary Epoch",
+			"Quark Epoch",
 			"Phthinosuchus",
 			"Ouranopithicus",
 			"Homo Erectus",
@@ -70,30 +54,6 @@ const evolution = new Vue({
 		ascensions: 0,
 
 		upgrades: [
-			{
-				name: [
-					"Faster Reproduction",
-					"Faster Reproduction",
-					"Faster Reproduction",
-					"Faster Reproduction",
-					"Faster Reproduction",
-					"Faster Reproduction",
-					"Faster Reproduction",
-					"Stronger Tools",
-					"Better Tech",
-					"Faster Algorithms",
-					"Faster Algorithms",
-					"Greater Universes",
-					"Universe Fragments",
-					"Perfect Universes",
-					// DO SOMETHING FOR INFINITIES VVV
-				],
-				level: new Decimal(1),
-				effect: "Increases Speed",
-				cost: new Decimal(10),
-				ocost: new Decimal(10),
-				prgm: "speed"
-			},
 			{
 				name: [
 					"Useful Genes",
@@ -120,14 +80,14 @@ const evolution = new Vue({
 			},
 		],
 
-		automata: [
+		fluctuator: [
 			{
 				name: [
-					"Heat Absorber",
-					"Metabolism Process",
-					"Metabolism Process",
-					"Metabolism Process",
-					"Metabolism Process",
+					"Force",
+					"Gravity",
+					"Gravity",
+					"Gravity",
+					"Gravity",
 					"Metabolism Process",
 					"Metabolism Process",
 					"Metabolism Process",
@@ -135,18 +95,18 @@ const evolution = new Vue({
 					"Energy Source",
 				],
 				amount: new Decimal(0),
-				eps: new Decimal(1),
-				cost: new Decimal(1000),
-				ocost: new Decimal(1000),
+				fps: new Decimal(1),
+				cost: new Decimal(10),
+				ocost: new Decimal(10),
 				unlocked: 0
 			},
 			{
 				name: [
 					"NOT SHOWN",
-					"Mitochondria",
-					"Integument System",
-					"Circulatory Management",
-					"Nerve",
+					"Electrostrong Force",
+					"Electroweak Force",
+					"Electroweak Force",
+					"Weak Force",
 					"Nerve",
 					"Nerve Group",
 					"Brain Nerve Group",
@@ -154,7 +114,7 @@ const evolution = new Vue({
 					"Neural Network Node",
 				],
 				amount: new Decimal(0),
-				eps: new Decimal(5),
+				fps: new Decimal(5),
 				cost: new Decimal(100000),
 				ocost: new Decimal(100000),
 				unlocked: 1
@@ -163,9 +123,9 @@ const evolution = new Vue({
 				name: [
 					"NOT SHOWN",
 					"NOT SHOWN",
-					"Protein Builder",
-					"Protein Builder",
-					"Protein Builder",
+					"Strong Force",
+					"Strong Force",
+					"Strong Force",
 					"Protein Builder",
 					"Protein Builder",
 					"Protein Builder",
@@ -173,10 +133,29 @@ const evolution = new Vue({
 					"Learning Algorithm",
 				],
 				amount: new Decimal(0),
-				eps: new Decimal(5),
+				fps: new Decimal(5),
 				cost: new Decimal(10000000), // 10 Million
 				ocost: new Decimal(10000000),
 				unlocked: 2
+			},
+			{
+				name: [
+					"NOT SHOWN",
+					"NOT SHOWN",
+					"NOT SHOWN",
+					"NOT SHOWN",
+					"Electromagnetic Force",
+					"Protein Builder",
+					"Protein Builder",
+					"Protein Builder",
+					"Protein Builder",
+					"Learning Algorithm",
+				],
+				amount: new Decimal(0),
+				fps: new Decimal(5),
+				cost: new Decimal(10000000), // 10 Million
+				ocost: new Decimal(10000000),
+				unlocked: 4
 			},
 		],
 
@@ -196,8 +175,8 @@ const evolution = new Vue({
 			return this.upgrades[this.upgradeMenu];
 		},
 
-		currentAutomata() {
-			return this.automata[this.automataMenu];
+		currentFluctuator() {
+			return this.fluctuator[this.fluctuatorMenu];
 		}
 	},
 
@@ -210,61 +189,32 @@ const evolution = new Vue({
 				this.totalNow = this.totalNow.plus(diff);
 			}
 			this.prevEnergy = this.energy;
-		},
-		
-		upgradeMenu() {
-			if (this.useSfx) this.sfx.switchitem.play();
-		},
-		automataMenu() {
-			if (this.useSfx) this.sfx.switchitem.play();
-		},
-		menu() {
-			if (this.useSfx) {
-				this.sfx.switchmenu.pause();
-				this.sfx.switchmenu.currentTime = 0;
-				this.sfx.switchmenu.play();
-			}
 		}
 	},
 
 	methods: {
 		format: numberformat.format,
 
-		mutate() {
-			if (this.canMutate) {
-				const gain = this.gain.times(this.wisdom);
-				this.eff = this.eff.plus(gain);
-
-				this.canMutate = false;
-				setTimeout(() => this.canMutate = true, this.speed);
-
-				if (this.useSfx) this.sfx.mutate.play();
-			}
-		},
-
 		evolve() {
 			this.evolveReq = this.evolveReq.times(1000);
 			this.stage++;
 			if (this.stage > this.highestStage) this.highestStage = this.stage;
-
-			if (this.useSfx) this.sfx.evolve.play();
 		},
 
 		ascend() {
 			this.energy = new Decimal(0);
 			this.eff = new Decimal(1);
 			this.speed = new Decimal(1000);
-			this.gain = new Decimal(1);
 			this.evolveReq = new Decimal(1000);
 			this.totalNow = new Decimal(0);
 			this.stage = 0;
 			
 			this.upgradeMenu = 0;
-			this.automataMenu = 0;
+			this.fluctuatorMenu = 0;
 			
-			for (let i = 0; i < this.automata.length; i++) {
-				this.automata[i].amount = new Decimal(0);
-				this.automata[i].cost = new Decimal(this.automata[i].ocost);
+			for (let i = 0; i < this.fluctuator.length; i++) {
+				this.fluctuator[i].amount = new Decimal(0);
+				this.fluctuator[i].cost = new Decimal(this.fluctuator[i].ocost);
 			}
 			
 			for (let i = 0; i < this.upgrades.length; i++) {
@@ -274,16 +224,14 @@ const evolution = new Vue({
 			
 			this.ascensions++;
 			this.wisdom = this.wisdom.plus(this.wisdomGain);
-
-			if (this.useSfx) this.sfx.ascend.play();
 		},
 
 		update(now) {
 			let diff = (now - this.prevTime) / 1000 || 0;
 
 			this.energy = this.energy.plus(this.eff.times(this.evMult).times(diff));
-			for (let i = 0; i < this.automata.length; i++) {
-				const gain = this.automata[i].eps.times(this.automata[i].amount).times(this.wisdom).times(diff);
+			for (let i = 0; i < this.fluctuator.length; i++) {
+				const gain = this.fluctuator[i].fps.times(this.fluctuator[i].amount).times(this.wisdom).times(diff);
 				this.eff = this.eff.plus(gain);
 			}
 
@@ -303,20 +251,16 @@ const evolution = new Vue({
 					this.speed = this.speed.times(0.6);
 					break;
 				case "gain":
-					this.gain = this.gain.times(2);
+					//this.gain = this.gain.times(2);
 			}
-
-			if (this.useSfx) this.sfx.upgrade.play();
 		},
 
-		getAutomata() {
-			const auto = this.currentAutomata;
+		getFluctuator() {
+			const auto = this.currentFluctuator;
 
 			this.energy = this.energy.minus(auto.cost);
 			auto.cost = auto.cost.times(1.25).floor();
 			auto.amount = auto.amount.plus(1);
-
-			if (this.useSfx) this.sfx.automata.play();
 		}
 	}
 });

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Evolution Beta</title>
+		<title>Creation - Beta</title>
 
 		<link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
 		<link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png">
@@ -37,8 +37,6 @@
 	</head>
 
 	<body class="container">
-		<audio id="background" src="/audio/background.mp3" autoplay loop></audio>
-
 		<div id="app">
 			<div class="row">
 				<div class="col-12">
@@ -47,10 +45,10 @@
 							Energy: {{ format(energy) }}
 						</span>
 						<span class="navbar-text">
-							Efficiency: {{ format(eff) }}
+							Fluctuations: {{ format(eff) }}
 						</span>
-						<span class="navbar-text">
-							Wisdom: {{ format(wisdom) }}
+						<span class="navbar-text" v-if="wisdom.gt(1)">
+							Level: {{ format(wisdom) }}
 						</span>
 					</nav>
 				</div>
@@ -61,22 +59,12 @@
 			<div class="row">
 				<div class="col-12">
 					<h1>
-						Evolution of {{ stages[stage] }}
+						The {{ stages[stage] }}
 					</h1>
 
 					<p>
 						This is a beta version. It is incomplete and there are many bugs.
 					</p>
-					
-					<button
-						class="btn btn-success btn-lg btn-block"
-						:class="[canMutate ? '' : 'disabled']"
-						@click="mutate()"
-						@keydown.prevent>
-						Mutate - Speed: {{ speed.div(1000).toString().slice(0, 4) }} Second
-					</button>
-					
-					<br>
 
 					<nav class="nav nav-pills">
 						<a
@@ -84,21 +72,21 @@
 							:class="[menu === 0 ? 'active' : '']"
 							href="#"
 							@click.prevent="menu = 0">
-							Species
+							Creation
 						</a>
 						<a
 							class="nav-link"
 							:class="[menu === 1 ? 'active' : '']"
 							href="#"
 							@click.prevent="menu = 1">
-							Evolution
+							Advancement
 						</a>
 						<a
 							class="nav-link"
 							:class="[menu === 2 ? 'active' : '']"
 							href="#"
 							@click.prevent="menu = 2">
-							Ascension
+							Recreation
 						</a>
 						<a
 							class="nav-link"
@@ -125,6 +113,52 @@
 				leave-active-class="animated flipOutX"
 				mode="out-in">
 				<div v-if="menu === 0" key="species">
+					<div class="row">
+						<div class="col-12">
+							<h2 class="text-center">Fluctuator</h2>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-3 col-12">
+							<nav class="nav nav-pills flex-column select-menu">
+								<a
+									v-for="(fluc, id) in fluctuator"
+									v-if="stage >= fluc.unlocked"
+									class="nav-link"
+									:class="[fluctuatorMenu === id ? 'active bg-danger' : 'text-danger']"
+									href="#"
+									@click.prevent="fluctuatorMenu = id">
+									{{ fluc.name[stage] }}
+								</a>
+							</nav>
+						</div>
+						<div class="col-lg-9 col-12">
+							<h3>{{ currentFluctuator.name[stage] }}</h3>
+							<p>
+								Amount: {{ format(currentFluctuator.amount) }}
+								<br>
+								FPS per {{ currentFluctuator.name[stage] }}:
+								{{ format(currentFluctuator.fps.times(wisdom)) }}
+								<br>
+								Total FPS:
+								{{ format(currentFluctuator.fps.times(wisdom).times(currentFluctuator.amount)) }}
+								<br>
+								Cost: {{ format(currentFluctuator.cost) }} Energy
+							</p>
+							<button
+								class="btn btn-danger btn-block"
+								v-if="energy.gte(currentFluctuator.cost)"
+								@click="getFluctuator()">
+								Create 1 {{ currentFluctuator.name[stage] }}
+							</button>
+							<p v-else>
+								You need more energy to create one.
+							</p>
+						</div>
+					</div>
+					
+					<hr>
+					
 					<div class="row">
 						<div class="col-12">
 							<h2 class="text-center">Upgrades</h2>
@@ -162,52 +196,6 @@
 								</button>
 								<p v-else>You need more energy to level up.</p>
 							</template>
-						</div>
-					</div>
-		
-					<hr>
-		
-					<div class="row">
-						<div class="col-12">
-							<h2 class="text-center">Automata</h2>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-3 col-12">
-							<nav class="nav nav-pills flex-column select-menu">
-								<a
-									v-for="(auto, id) in automata"
-									v-if="stage >= auto.unlocked"
-									class="nav-link"
-									:class="[automataMenu === id ? 'active bg-danger' : 'text-danger']"
-									href="#"
-									@click.prevent="automataMenu = id">
-									{{ auto.name[stage] }}
-								</a>
-							</nav>
-						</div>
-						<div class="col-lg-9 col-12">
-							<h3>{{ currentAutomata.name[stage] }}</h3>
-							<p>
-								Amount: {{ format(currentAutomata.amount) }}
-								<br>
-								EPS per {{ currentAutomata.name[stage] }}:
-								{{ format(currentAutomata.eps.times(wisdom)) }}
-								<br>
-								Total EPS:
-								{{ format(currentAutomata.eps.times(wisdom).times(currentAutomata.amount)) }}
-								<br>
-								Cost: {{ format(currentAutomata.cost) }} Energy
-							</p>
-							<button
-								class="btn btn-danger btn-block"
-								v-if="energy.gte(currentAutomata.cost)"
-								@click="getAutomata()">
-								Create 1 {{ currentAutomata.name[stage] }}
-							</button>
-							<p v-else>
-								You need more energy to create one.
-							</p>
 						</div>
 					</div>
 				</div>
@@ -251,11 +239,10 @@
 							<h2>Ascension</h2>
 							<p>
 								Ascension will restart the time sequence, but you will retain wisdom.
-								Wisdom is a multiplier that will make your progress faster.
+								Universe Level has a multiplier that will make your progress faster.
 								Right now, you have {{ format(wisdom) }} wisdom.
-								This creates a {{ format(wisdom) }}x multiplier for efficiency gain.
-								Wisdom increases the amount of efficiency that you gain from
-								clicking and automata.
+								This creates a {{ format(wisdom) }}x multiplier for efficiency gain,
+								increasing the amount of efficiency that you gain from clicking and fluctuator.
 							</p>
 
 							<template v-if="this.wisdomGain.gte(1)">
@@ -305,11 +292,11 @@
 
 							<h2>Ascensions</h2>
 							<p>
-								Wisdom: {{ format(wisdom) }}
+								Universe Level: {{ format(wisdom) }}
 								<br>
 								Total Ascensions: {{ ascensions }}
 								<br>
-								Wisdom Gained After Ascension: {{ format(wisdomGain) }}
+								Universe Level Gained After Ascension: {{ format(wisdomGain) }}
 							</p>
 						</div>
 					</div>
@@ -324,15 +311,6 @@
 									class="btn btn-outline-primary">
 									Back to CubeDHuang
 								</a>
-							</p>
-							<p>
-								Sound Effects: <input type="checkbox" v-model="useSfx">
-								<br>
-								Background Music:
-								<input
-									type="checkbox"
-									:checked="!music.muted"
-									@click="music.muted = !music.muted">
 							</p>
 
 							<img src="/logo.svg" alt="Evolution Logo" class="logo">
