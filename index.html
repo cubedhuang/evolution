@@ -42,13 +42,13 @@
 				<div class="col-12">
 					<nav class="navbar navbar-dark bg-primary">
 						<span class="navbar-text">
-							Energy: {{ format(energy) }}
+							Energy: {{ format(energy, { flavor: "full" }) }}
 						</span>
 						<span class="navbar-text">
-							Fluctuations: {{ format(eff) }}
+							Fluctuations: {{ format(flucs, { flavor: "full" }) }}
 						</span>
-						<span class="navbar-text" v-if="wisdom.gt(1)">
-							Level: {{ format(wisdom) }}
+						<span class="navbar-text" v-if="level.gt(1)">
+							Level: {{ format(level, { flavor: "full" }) }}
 						</span>
 					</nav>
 				</div>
@@ -64,6 +64,7 @@
 
 					<p>
 						This is a beta version. It is incomplete and there are many bugs.
+						**Important: saving is not yet implemented**
 					</p>
 
 					<nav class="nav nav-pills">
@@ -112,17 +113,25 @@
 				enter-active-class="animated zoomIn"
 				leave-active-class="animated flipOutX"
 				mode="out-in">
-				<div v-if="menu === 0" key="species">
+				<div v-if="menu === 0" key="creation">
+					<div v-if="creationAlert" class="alert alert-primary" role="alert">
+						<p>
+							This is the creation menu. Here, you can buy fluctuators which will create fluctuations.
+							Fluctuations will create energy, which you can use to buy more fluctuators.
+						</p>
+						<button @click="creationAlert = false" class="btn btn-primary btn-sm">Ok</button>
+					</div>
+
 					<div class="row">
 						<div class="col-12">
-							<h2 class="text-center">Fluctuator</h2>
+							<h2 class="text-center">Fluctuators</h2>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-lg-3 col-12">
 							<nav class="nav nav-pills flex-column select-menu">
 								<a
-									v-for="(fluc, id) in fluctuator"
+									v-for="(fluc, id) in fluctuators"
 									v-if="stage >= fluc.unlocked"
 									class="nav-link"
 									:class="[fluctuatorMenu === id ? 'active bg-danger' : 'text-danger']"
@@ -138,10 +147,10 @@
 								Amount: {{ format(currentFluctuator.amount) }}
 								<br>
 								FPS per {{ currentFluctuator.name[stage] }}:
-								{{ format(currentFluctuator.fps.times(wisdom)) }}
+								{{ format(currentFluctuator.fps.times(level)) }}
 								<br>
 								Total FPS:
-								{{ format(currentFluctuator.fps.times(wisdom).times(currentFluctuator.amount)) }}
+								{{ format(currentFluctuator.fps.times(level).times(currentFluctuator.amount)) }}
 								<br>
 								Cost: {{ format(currentFluctuator.cost) }} Energy
 							</p>
@@ -156,69 +165,27 @@
 							</p>
 						</div>
 					</div>
-					
-					<hr>
-					
-					<div class="row">
-						<div class="col-12">
-							<h2 class="text-center">Upgrades</h2>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-3 col-12">
-							<nav class="nav nav-pills flex-column select-menu">
-								<a
-									v-for="(up, id) in upgrades"
-									class="nav-link"
-									:class="[upgradeMenu === id ? 'active bg-warning' : 'text-warning']"
-									href="#"
-									@click.prevent="upgradeMenu = id">
-									{{ up.name[stage] }}
-								</a>
-							</nav>
-						</div>
-
-						<div class="col-lg-9 col-12">
-							<template>
-								<h3>{{ currentUpgrade.name[stage] }}</h3>
-								<p>
-									Level: {{ format(currentUpgrade.level) }}
-									<br>
-									Effect: {{ currentUpgrade.effect }}
-									<br>
-									Cost: {{ format(currentUpgrade.cost) }} Energy
-								</p>
-								<button
-									class="btn btn-warning btn-block"
-									v-if="energy.gte(currentUpgrade.cost)"
-									@click="getUpgrade()">
-									Level Up
-								</button>
-								<p v-else>You need more energy to level up.</p>
-							</template>
-						</div>
-					</div>
 				</div>
 
 				<div v-if="menu === 1" key="evolution">
 					<div class="row">
 						<div class="col-12">
-							<h2>Evolving</h2>
+							<h2>Advancements</h2>
 							<p>
 								Next Stage: {{ stages[stage + 1] }}.
 								Right now,
-								you have a {{ format(Decimal.pow(5, stage)) }}x
-								efficiency multiplier from evolving.
-								Evolution will increase the amount of energy you gain per efficiency.
-								When you evolve to {{ stages[stage + 1] }},
-								you will have a total of {{ format(Decimal.pow(5, stage + 1)) }}x
+								you have a x{{ format(Decimal.pow(5, stage)) }}
+								fluctuations multiplier from advancements.
+								Evolution will increase the amount of energy you gain per fluctuations.
+								When you advance to the {{ stages[stage + 1] }},
+								you will have a total of x{{ format(Decimal.pow(5, stage + 1)) }}.
 							</p>
 
-							<p v-if="eff.lt(evolveReq)">
-								Status: {{ format(eff) }} /
-								{{ format(evolveReq) }} efficiency
+							<p v-if="flucs.lt(evolveReq)">
+								Status: {{ format(flucs) }} /
+								{{ format(evolveReq) }} fluctuations
 								<br>
-								{{ format(eff.div(evolveReq).times(100)) }}%
+								{{ format(flucs.div(evolveReq).times(100)) }}%
 								to next species.
 							</p>
 
@@ -226,36 +193,36 @@
 								<button
 									class="btn btn-outline-primary btn-lg btn-block"
 									@click="evolve">
-									Evolve to {{ stages[stage + 1] }}
+									Advance to the {{ stages[stage + 1] }}
 								</button>
-								<p class="small">Progress is not reset when you evolve.</p>
+								<p class="small">Progress is not reset when you advance.</p>
 							</template>
 						</div>
 					</div>
 				</div>
-				<div v-if="menu === 2" key="ascension">
+				<div v-if="menu === 2" key="recreation">
 					<div class="row">
 						<div class="col-12">
-							<h2>Ascension</h2>
+							<h2>Recreation</h2>
 							<p>
-								Ascension will restart the time sequence, but you will retain wisdom.
-								Universe Level has a multiplier that will make your progress faster.
-								Right now, you have {{ format(wisdom) }} wisdom.
-								This creates a {{ format(wisdom) }}x multiplier for efficiency gain,
-								increasing the amount of efficiency that you gain from clicking and fluctuator.
+								Recreation will restart the time sequence, but you will retain your universe's level.
+								Universe Level is a multiplier that will make your progress faster.
+								Right now, your universe is level {{ format(level) }}.
+								This creates a x{{ format(level) }} multiplier for efficiency gain,
+								increasing the amount of efficiency that you gain from fluctuators.
 							</p>
 
-							<template v-if="this.wisdomGain.gte(1)">
+							<template v-if="this.levelGain.gte(1)">
 								<button
 									class="btn btn-outline-primary btn-lg btn-block"
 									@click="ascend">
-									ASCEND - Restart the Time Sequence
+									Restart the Time Sequence
 									<br>
 									<span class="small">
-										You will gain {{ format(wisdomGain) }} wisdom.
+										You will gain {{ format(levelGain) }} level.
 										<br>
 										Current:
-										{{ format(wisdom) }} &raquo; New: {{ format(wisdom.plus(wisdomGain)) }}
+										{{ format(level) }} &raquo; New: {{ format(level.plus(levelGain)) }}
 									</span>
 								</button>
 							</template>
@@ -272,13 +239,13 @@
 						<div class="col-12">
 							<h2>Energy</h2>
 							<p>
-								Energy: {{ format(energy) }}
+								Energy: {{ format(energy, { flavor: "full" }) }}
 								<br>
-								Efficiency: {{ format(eff) }}
+								Fluctuations: {{ format(flucs, { flavor: "full" }) }}
 								<br>
-								Total Energy This Ascension: {{ format(totalNow) }}
+								Total Energy This Ascension: {{ format(totalNow, { flavor: "full" }) }}
 								<br>
-								Total Energy Ever: {{ format(total) }}
+								Total Energy Ever: {{ format(total, { flavor: "full" }) }}
 							</p>
 
 							<h2>Evolution</h2>
@@ -290,13 +257,13 @@
 								Highest Stage Ever: {{ stages[highestStage] }}
 							</p>
 
-							<h2>Ascensions</h2>
+							<h2>Recreation</h2>
 							<p>
-								Universe Level: {{ format(wisdom) }}
+								Universe Level: {{ format(level, { flavor: "full" }) }}
 								<br>
-								Total Ascensions: {{ ascensions }}
+								Recreations: {{ ascensions }}
 								<br>
-								Universe Level Gained After Ascension: {{ format(wisdomGain) }}
+								Universe Level Gained After Recreation: {{ format(levelGain, { flavor: "full" }) }}
 							</p>
 						</div>
 					</div>
@@ -322,7 +289,8 @@
 
 		<script src="/resources/decimal.min.js"></script>
 		<script src="/resources/format.min.js"></script>
-		<script src="/resources/vue.min.js"></script>
+		<script src="/resources/vue.dev.js"></script>
+		<script src="constants.js"></script>
 		<script src="script.js"></script>
 	</body>
 </html>

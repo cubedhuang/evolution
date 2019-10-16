@@ -1,0 +1,21 @@
+const CONSTANTS = {
+	stages: [
+		"Planck Epoch",
+		"Grand Unification Epoch",
+		"Electroweak Epoch",
+		"Inflationary Epoch",
+		"Quark Epoch",
+		"Phthinosuchus",
+		"Ouranopithicus",
+		"Homo Erectus",
+		"Homo Sapiens Sapiens",
+		"Artificial Intelligence",
+		"Intelligent Energy",
+		"Universe Creators",
+		"Universe Corruptors",
+		"Multiverse Protectors",
+		"Omniverse Infinities",
+		"Dimensional Seers",
+		"Dimensional Shifters",
+	],
+}

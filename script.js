@@ -1,86 +1,41 @@
-const evolution = new Vue({
+const creation = new Vue({
 	el: "#app",
 
-	created() {
+	mounted() {
 		numberformat.default.opts = {
-			sigfigs: 5,
-			format: "standard",
 			flavor: "short",
+			format: "standard",
+			sigfigs: 5,
 			backend: "decimal.js",
-			Decimal: Decimal
-		};
-
+			Decimal
+		}
+		
 		this.update();
 	},
 
 	data: {
-		eff: new Decimal(1),
-		energy: new Decimal(0),
+		creationAlert: true,
+
+		energy: new Decimal(10),
+		flucs: new Decimal(1),
 		prevEnergy: new Decimal(0),
 		totalNow: new Decimal(0),
 		total: new Decimal(0),
-		speed: new Decimal(500),
 		
 		menu: 0,
-		upgradeMenu: 0,
 		fluctuatorMenu: 0,
 		
 		prevTime: 0,
 
 		evolveReq: new Decimal(1000),
 		stage: 0,
-		stages: [
-			"Planck Epoch",
-			"Grand Unification Epoch",
-			"Electroweak Epoch",
-			"Inflationary Epoch",
-			"Quark Epoch",
-			"Phthinosuchus",
-			"Ouranopithicus",
-			"Homo Erectus",
-			"Homo Sapiens Sapiens",
-			"Artificial Intelligence",
-			"Intelligent Energy",
-			"Universe Creators",
-			"Universe Corruptors",
-			"Multiverse Protectors",
-			"Omniverse Infinities",
-			"Dimensional Seers",
-			"Dimensional Shifters",
-		],
+		stages: CONSTANTS.stages,
 		highestStage: 0,
 		
-		wisdom: new Decimal(1),
+		level: new Decimal(1),
 		ascensions: 0,
 
-		upgrades: [
-			{
-				name: [
-					"Useful Genes",
-					"Useful Proteins",
-					"Advanced Genes",
-					"Advanced Proteins",
-					"Bigger Size",
-					"Complex Brains",
-					"Complex Brains",
-					"Complex Brains",
-					"Complex Brains",
-					"Improved Processing",
-					"Improved Expansion",
-					"Exotic Universes",
-					"Faster Destruction",
-					"Exotic Multiverses",
-					// DO SOMETHING FOR INFINITIES VVV
-				],
-				level: new Decimal(1),
-				effect: "More Energy Gain",
-				cost: new Decimal(100),
-				ocost: new Decimal(100),
-				prgm: "gain"
-			},
-		],
-
-		fluctuator: [
+		fluctuators: [
 			{
 				name: [
 					"Force",
@@ -133,7 +88,7 @@ const evolution = new Vue({
 					"Learning Algorithm",
 				],
 				amount: new Decimal(0),
-				fps: new Decimal(5),
+				fps: new Decimal(20),
 				cost: new Decimal(10000000), // 10 Million
 				ocost: new Decimal(10000000),
 				unlocked: 2
@@ -152,7 +107,7 @@ const evolution = new Vue({
 					"Learning Algorithm",
 				],
 				amount: new Decimal(0),
-				fps: new Decimal(5),
+				fps: new Decimal(50),
 				cost: new Decimal(10000000), // 10 Million
 				ocost: new Decimal(10000000),
 				unlocked: 4
@@ -163,12 +118,12 @@ const evolution = new Vue({
 	},
 
 	computed: {
-		evMult() {
+		advMult() {
 			return Decimal.pow(5, this.stage);
 		},
 
-		wisdomGain() {
-			return this.total.div(1000000).plus(1).cbrt().minus(this.wisdom).floor();
+		levelGain() {
+			return this.total.div(1000000).plus(1).cbrt().minus(this.level).floor();
 		},
 
 		currentUpgrade() {
@@ -176,7 +131,7 @@ const evolution = new Vue({
 		},
 
 		currentFluctuator() {
-			return this.fluctuator[this.fluctuatorMenu];
+			return this.fluctuators[this.fluctuatorMenu];
 		}
 	},
 
@@ -202,57 +157,34 @@ const evolution = new Vue({
 		},
 
 		ascend() {
-			this.energy = new Decimal(0);
-			this.eff = new Decimal(1);
-			this.speed = new Decimal(1000);
+			this.energy = new Decimal(10);
+			this.flucs = new Decimal(1);
 			this.evolveReq = new Decimal(1000);
 			this.totalNow = new Decimal(0);
 			this.stage = 0;
 			
-			this.upgradeMenu = 0;
 			this.fluctuatorMenu = 0;
 			
-			for (let i = 0; i < this.fluctuator.length; i++) {
-				this.fluctuator[i].amount = new Decimal(0);
-				this.fluctuator[i].cost = new Decimal(this.fluctuator[i].ocost);
-			}
-			
-			for (let i = 0; i < this.upgrades.length; i++) {
-				this.upgrades[i].level = new Decimal(1);
-				this.upgrades[i].cost = new Decimal(this.upgrades[i].ocost);
+			for (let i = 0; i < this.fluctuators.length; i++) {
+				this.fluctuators[i].amount = new Decimal(0);
+				this.fluctuators[i].cost = new Decimal(this.fluctuators[i].ocost);
 			}
 			
 			this.ascensions++;
-			this.wisdom = this.wisdom.plus(this.wisdomGain);
+			this.level = this.level.plus(this.levelGain);
 		},
 
 		update(now) {
 			let diff = (now - this.prevTime) / 1000 || 0;
 
-			this.energy = this.energy.plus(this.eff.times(this.evMult).times(diff));
-			for (let i = 0; i < this.fluctuator.length; i++) {
-				const gain = this.fluctuator[i].fps.times(this.fluctuator[i].amount).times(this.wisdom).times(diff);
-				this.eff = this.eff.plus(gain);
+			this.energy = this.energy.plus(this.flucs.times(this.advMult).times(diff));
+			for (let i = 0; i < this.fluctuators.length; i++) {
+				const gain = this.fluctuators[i].fps.times(this.fluctuators[i].amount).times(this.level).times(diff);
+				this.flucs = this.flucs.plus(gain);
 			}
 
 			this.prevTime = now;
 			requestAnimationFrame(this.update);
-		},
-
-		getUpgrade() {
-			const upgrade = this.currentUpgrade;
-
-			this.energy = this.energy.minus(upgrade.cost);
-			upgrade.cost = upgrade.cost.times(10);
-			upgrade.level = upgrade.level.plus(1);
-
-			switch (upgrade.prgm) {
-				case "speed":
-					this.speed = this.speed.times(0.6);
-					break;
-				case "gain":
-					//this.gain = this.gain.times(2);
-			}
 		},
 
 		getFluctuator() {
